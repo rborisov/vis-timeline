@@ -84,10 +84,13 @@ describe('normalizeItem', () => {
     expect(() => normalizeItem({ content: 'test' }, 0)).toThrow('missing "start"');
   });
 
-  it('passes CE date through as string', () => {
+  it('converts CE date string to Date object', () => {
     const item = normalizeItem({ content: 'Battle of Hastings', start: '1066-10-14' }, 0);
-    expect(item.start).toBe('1066-10-14');
-    expect(item.title).toBeUndefined(); // no auto-title for CE string
+    expect(item.start).toBeInstanceOf(Date);
+    expect((item.start as Date).getUTCFullYear()).toBe(1066);
+    expect((item.start as Date).getUTCMonth()).toBe(9); // October = index 9
+    expect((item.start as Date).getUTCDate()).toBe(14);
+    expect(item.title).toBe('1066 CE: Battle of Hastings');
   });
 
   it('converts negative year start to Date', () => {
@@ -106,10 +109,11 @@ describe('normalizeItem', () => {
     expect(item.title).toBe('My Title');
   });
 
-  it('converts BCE end to Date, passes CE end as string', () => {
+  it('converts BCE start and CE end both to Date objects', () => {
     const item = normalizeItem({ content: 'Roman Empire', start: '-27', end: '476' }, 0);
     expect(item.start).toBeInstanceOf(Date);
-    expect(item.end).toBe('476');
+    expect(item.end).toBeInstanceOf(Date);
+    expect((item.end as Date).getUTCFullYear()).toBe(476);
   });
 
   it('passes through optional fields', () => {
