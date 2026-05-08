@@ -1,4 +1,4 @@
-import type { NormalizedTimelineItem, BlockOptions } from './types';
+import type { NormalizedTimelineItem, NormalizedGroup, BlockOptions } from './types';
 import { Timeline } from 'vis-timeline/standalone';
 
 const DEFAULT_OPTIONS: Required<BlockOptions> = {
@@ -12,7 +12,8 @@ const DEFAULT_OPTIONS: Required<BlockOptions> = {
 export function renderTimeline(
   el: HTMLElement,
   items: NormalizedTimelineItem[],
-  options: BlockOptions = {}
+  options: BlockOptions = {},
+  groups?: NormalizedGroup[]
 ): { destroy(): void } {
   const merged = { ...DEFAULT_OPTIONS, ...options };
 
@@ -23,12 +24,10 @@ export function renderTimeline(
   container.style.minHeight = '300px';
 
   const TimelineConstructor = Timeline as unknown as new (
-    container: HTMLElement,
-    items: NormalizedTimelineItem[],
-    options?: Record<string, unknown>
+    ...args: unknown[]
   ) => { destroy(): void; redraw(): void };
 
-  const tl = new TimelineConstructor(container, items, {
+  const visOptions = {
     editable: false,
     height: '100%',
     margin: { item: { horizontal: 10, vertical: 4 }, axis: 5 },
@@ -36,7 +35,11 @@ export function renderTimeline(
     stack: merged.stack,
     zoomMin: merged.zoomMin,
     zoomMax: merged.zoomMax,
-  });
+  };
+
+  const tl = groups !== undefined
+    ? new TimelineConstructor(container, items, groups, visOptions)
+    : new TimelineConstructor(container, items, visOptions);
 
   // Force a redraw after the next layout pass so vis-timeline gets real
   // container dimensions. Without this, iOS renders into a zero-size box.
