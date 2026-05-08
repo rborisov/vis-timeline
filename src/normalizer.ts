@@ -10,7 +10,7 @@ export function parseBceDate(value: string): Date | null {
 
   const negMatch = NEGATIVE_YEAR_RE.exec(trimmed);
   if (negMatch) {
-    const year = parseInt(negMatch[1], 10);
+    const year = parseInt(negMatch[1] ?? '', 10);
     const month = negMatch[2] ? parseInt(negMatch[2], 10) : 1;
     const day = negMatch[3] ? parseInt(negMatch[3], 10) : 1;
     return buildBceDate(year, month, day);
@@ -18,7 +18,7 @@ export function parseBceDate(value: string): Date | null {
 
   const bceMatch = BCE_SUFFIX_RE.exec(trimmed);
   if (bceMatch) {
-    const absYear = parseInt(bceMatch[1], 10);
+    const absYear = parseInt(bceMatch[1] ?? '', 10);
     const month = bceMatch[2] ? parseInt(bceMatch[2], 10) : 1;
     const day = bceMatch[3] ? parseInt(bceMatch[3], 10) : 1;
     return buildBceDate(-absYear, month, day);

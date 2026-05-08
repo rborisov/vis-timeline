@@ -11,8 +11,8 @@ describe('parseBlock', () => {
 `.trim();
     const result = parseBlock(source);
     expect(result.items).toHaveLength(2);
-    expect(result.items[0].content).toBe('Battle of Hastings');
-    expect(result.items[1].start).toBe('1215');
+    expect(result.items[0]?.content).toBe('Battle of Hastings');
+    expect(result.items[1]?.start).toBe('1215');
     expect(result.options).toEqual({});
   });
 
@@ -39,7 +39,7 @@ items:
     expect(result.options.height).toBe('400px');
     expect(result.options.orientation).toBe('bottom');
     expect(result.items).toHaveLength(1);
-    expect(result.items[0].content).toBe('Battle of Hastings');
+    expect(result.items[0]?.content).toBe('Battle of Hastings');
   });
 
   it('throws for content that is neither valid YAML nor JSON', () => {
