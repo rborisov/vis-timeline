@@ -12,7 +12,7 @@ export async function renderTimeline(
   el: HTMLElement,
   items: NormalizedTimelineItem[],
   options: BlockOptions = {}
-): Promise<void> {
+): Promise<{ destroy(): void }> {
   const merged = { ...DEFAULT_OPTIONS, ...options };
 
   const container = el.createEl('div');
@@ -29,9 +29,9 @@ export async function renderTimeline(
     container: HTMLElement,
     items: NormalizedTimelineItem[],
     options?: Record<string, unknown>
-  ) => unknown;
+  ) => { destroy(): void };
 
-  new TimelineConstructor(container, items, {
+  const tl = new TimelineConstructor(container, items, {
     editable: false,
     height: '100%',
     margin: { item: { horizontal: 10, vertical: 4 }, axis: 5 },
@@ -41,4 +41,6 @@ export async function renderTimeline(
     zoomMin: merged.zoomMin,
     zoomMax: merged.zoomMax,
   });
+
+  return tl;
 }

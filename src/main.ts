@@ -14,7 +14,8 @@ export default class VisTimelinePlugin extends Plugin {
       try {
         const { items: rawItems, options } = parseBlock(source);
         const items = rawItems.map((item, i) => normalizeItem(item, i));
-        await renderTimeline(el, items, options);
+        const tl = await renderTimeline(el, items, options);
+        this.register(() => tl.destroy());
       } catch (e) {
         el.createEl('div', {
           text: `vis-timeline error: ${e instanceof Error ? e.message : String(e)}`,
