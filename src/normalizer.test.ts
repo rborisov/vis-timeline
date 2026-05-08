@@ -243,4 +243,12 @@ describe('resolveGroups (explicit)', () => {
       'Group "parent" references unknown nested group "ghost"'
     );
   });
+
+  it('throws for duplicate group ids', () => {
+    const raw: RawGroupItem[] = [
+      { id: 'military' },
+      { id: 'military' },
+    ];
+    expect(() => resolveGroups([], raw)).toThrow('Duplicate group id "military"');
+  });
 });
