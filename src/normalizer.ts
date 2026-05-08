@@ -55,14 +55,21 @@ function isBceString(value: string): boolean {
 }
 
 // Matches CE dates with a 1-3 digit year: "330", "476", "330-06-15"
-const SHORT_CE_YEAR_RE = /^(\d{1,3})(-.+)?$/;
+const SHORT_CE_YEAR_RE = /^(\d{1,3})(?:-(\d{1,2})(?:-(\d{1,2}))?)?$/;
 
-// moment.js requires ISO 8601: year must be at least 4 digits.
-// "476" → "0476", "330-06-15" → "0330-06-15", "1066" → unchanged.
-function padCeYear(value: string): string {
+// moment.js cannot reliably parse years < 1000. Convert to a Date object
+// using setUTCFullYear (same as BCE path) to bypass moment entirely.
+// 4+ digit years ("1066", "2024") pass through as strings — moment handles those.
+function normalizeCeDate(value: string): string | Date {
   const match = SHORT_CE_YEAR_RE.exec(value.trim());
   if (!match) return value;
-  return (match[1] ?? '').padStart(4, '0') + (match[2] ?? '');
+  const year  = parseInt(match[1] ?? '1', 10);
+  const month = match[2] ? parseInt(match[2], 10) : 1;
+  const day   = match[3] ? parseInt(match[3], 10) : 1;
+  const date = new Date(0);
+  date.setUTCFullYear(year, month - 1, day);
+  date.setUTCHours(12, 0, 0, 0);
+  return date;
 }
 
 function stripHtml(html: string): string {
@@ -88,9 +95,9 @@ export function normalizeItem(raw: unknown, index: number): NormalizedTimelineIt
     throw new Error(`Item #${index + 1} is missing "start". Content: ${content.slice(0, 80)}`);
   }
 
-  const start: Date | string = isBceString(startRaw) ? parseBceDate(startRaw)! : padCeYear(startRaw);
+  const start: Date | string = isBceString(startRaw) ? parseBceDate(startRaw)! : normalizeCeDate(startRaw);
   const end: Date | string | undefined = endRaw
-    ? (isBceString(endRaw) ? parseBceDate(endRaw)! : padCeYear(endRaw))
+    ? (isBceString(endRaw) ? parseBceDate(endRaw)! : normalizeCeDate(endRaw))
     : undefined;
 
   let title = typeof item.title === 'string' ? item.title : undefined;
