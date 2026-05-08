@@ -54,6 +54,17 @@ function isBceString(value: string): boolean {
   return NEGATIVE_YEAR_RE.test(value.trim()) || BCE_SUFFIX_RE.test(value.trim());
 }
 
+// Matches CE dates with a 1-3 digit year: "330", "476", "330-06-15"
+const SHORT_CE_YEAR_RE = /^(\d{1,3})(-.+)?$/;
+
+// moment.js requires ISO 8601: year must be at least 4 digits.
+// "476" → "0476", "330-06-15" → "0330-06-15", "1066" → unchanged.
+function padCeYear(value: string): string {
+  const match = SHORT_CE_YEAR_RE.exec(value.trim());
+  if (!match) return value;
+  return (match[1] ?? '').padStart(4, '0') + (match[2] ?? '');
+}
+
 function stripHtml(html: string): string {
   if (typeof document === 'undefined') {
     return html.replace(/<[^>]*>/g, '');
@@ -77,9 +88,9 @@ export function normalizeItem(raw: unknown, index: number): NormalizedTimelineIt
     throw new Error(`Item #${index + 1} is missing "start". Content: ${content.slice(0, 80)}`);
   }
 
-  const start: Date | string = isBceString(startRaw) ? parseBceDate(startRaw)! : startRaw;
+  const start: Date | string = isBceString(startRaw) ? parseBceDate(startRaw)! : padCeYear(startRaw);
   const end: Date | string | undefined = endRaw
-    ? (isBceString(endRaw) ? parseBceDate(endRaw)! : endRaw)
+    ? (isBceString(endRaw) ? parseBceDate(endRaw)! : padCeYear(endRaw))
     : undefined;
 
   let title = typeof item.title === 'string' ? item.title : undefined;
