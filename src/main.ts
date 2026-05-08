@@ -1,6 +1,6 @@
 import { Plugin } from 'obsidian';
 import { parseBlock } from './parser';
-import { normalizeItem } from './normalizer';
+import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';
 
@@ -12,9 +12,10 @@ export default class VisTimelinePlugin extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor('vis-timeline', (source, el) => {
       try {
-        const { items: rawItems, options } = parseBlock(source);
+        const { items: rawItems, groups: rawGroups, options } = parseBlock(source);
         const items = rawItems.map((item, i) => normalizeItem(item, i));
-        const tl = renderTimeline(el, items, options);
+        const groups = resolveGroups(items, rawGroups);
+        const tl = renderTimeline(el, items, options, groups);
         this.register(() => tl.destroy());
       } catch (e) {
         el.createEl('div', {
