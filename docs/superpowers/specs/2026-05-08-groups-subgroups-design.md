@@ -43,6 +43,33 @@ items:
     group: political
 ```
 
+### JSON equivalents
+
+Auto-inferred (flat array):
+
+```json
+[
+  { "content": "Battle of Hastings", "start": "1066-10-14", "group": "military" },
+  { "content": "Magna Carta", "start": "1215", "group": "political" }
+]
+```
+
+Explicit groups (object form):
+
+```json
+{
+  "groups": [
+    { "id": "medieval", "content": "Medieval Period", "nestedGroups": ["military", "political"], "showNested": false },
+    { "id": "military", "content": "Military Events" },
+    { "id": "political", "content": "Political Events" }
+  ],
+  "items": [
+    { "content": "Battle of Hastings", "start": "1066-10-14", "group": "military" },
+    { "content": "Magna Carta", "start": "1215", "group": "political" }
+  ]
+}
+```
+
 ### Group fields
 
 | Field          | Type                     | Required | Default       | Notes                                      |
