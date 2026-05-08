@@ -10,11 +10,11 @@ export default class VisTimelinePlugin extends Plugin {
   async onload() {
     await this.loadSettings();
 
-    this.registerMarkdownCodeBlockProcessor('vis-timeline', async (source, el) => {
+    this.registerMarkdownCodeBlockProcessor('vis-timeline', (source, el) => {
       try {
         const { items: rawItems, options } = parseBlock(source);
         const items = rawItems.map((item, i) => normalizeItem(item, i));
-        const tl = await renderTimeline(el, items, options);
+        const tl = renderTimeline(el, items, options);
         this.register(() => tl.destroy());
       } catch (e) {
         el.createEl('div', {

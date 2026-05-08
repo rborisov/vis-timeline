@@ -1,4 +1,5 @@
 import type { NormalizedTimelineItem, BlockOptions } from './types';
+import { Timeline } from 'vis-timeline/standalone';
 
 const DEFAULT_OPTIONS: Required<BlockOptions> = {
   height: '75vh',
@@ -8,11 +9,11 @@ const DEFAULT_OPTIONS: Required<BlockOptions> = {
   zoomMax: 1000 * 60 * 60 * 24 * 365 * 10000,
 };
 
-export async function renderTimeline(
+export function renderTimeline(
   el: HTMLElement,
   items: NormalizedTimelineItem[],
   options: BlockOptions = {}
-): Promise<{ destroy(): void }> {
+): { destroy(): void } {
   const merged = { ...DEFAULT_OPTIONS, ...options };
 
   const container = el.createEl('div');
@@ -20,16 +21,12 @@ export async function renderTimeline(
   container.style.width = '100%';
   container.style.height = merged.height;
   container.style.minHeight = '300px';
-  container.style.resize = 'vertical';
-  container.style.overflow = 'auto';
-
-  const { Timeline } = await import('vis-timeline/standalone');
 
   const TimelineConstructor = Timeline as unknown as new (
     container: HTMLElement,
     items: NormalizedTimelineItem[],
     options?: Record<string, unknown>
-  ) => { destroy(): void };
+  ) => { destroy(): void; redraw(): void };
 
   const tl = new TimelineConstructor(container, items, {
     editable: false,
@@ -37,10 +34,13 @@ export async function renderTimeline(
     margin: { item: { horizontal: 10, vertical: 4 }, axis: 5 },
     orientation: merged.orientation,
     stack: merged.stack,
-    verticalScroll: true,
     zoomMin: merged.zoomMin,
     zoomMax: merged.zoomMax,
   });
+
+  // Force a redraw after the next layout pass so vis-timeline gets real
+  // container dimensions. Without this, iOS renders into a zero-size box.
+  requestAnimationFrame(() => tl.redraw());
 
   return tl;
 }
