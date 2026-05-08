@@ -19,6 +19,22 @@ export interface NormalizedTimelineItem {
   group?: string | number;
 }
 
+export interface RawGroupItem {
+  id: string | number;
+  content?: string;
+  nestedGroups?: (string | number)[];
+  showNested?: boolean;
+  className?: string;
+}
+
+export interface NormalizedGroup {
+  id: string | number;
+  content: string;
+  nestedGroups?: (string | number)[];
+  showNested?: boolean;
+  className?: string;
+}
+
 export interface BlockOptions {
   height?: string;
   orientation?: 'top' | 'bottom' | 'both';
@@ -29,5 +45,6 @@ export interface BlockOptions {
 
 export interface ParseResult {
   items: RawTimelineItem[];
+  groups?: RawGroupItem[];
   options: BlockOptions;
 }
