@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseBceDate, formatHistoricalYear, normalizeItem, resolveGroups } from './normalizer';
+import type { RawGroupItem } from './types';
 
 describe('parseBceDate', () => {
   it('returns null for a CE year string', () => {
@@ -170,5 +171,76 @@ describe('resolveGroups (auto-infer)', () => {
     const groups = resolveGroups(items);
     expect(groups).toHaveLength(1);
     expect(groups![0]!.id).toBe('political');
+  });
+});
+
+describe('resolveGroups (explicit)', () => {
+  it('returns undefined for an empty rawGroups array', () => {
+    expect(resolveGroups([], [])).toBeUndefined();
+  });
+
+  it('normalizes a basic group entry', () => {
+    const raw: RawGroupItem[] = [{ id: 'military', content: 'Military Events' }];
+    const groups = resolveGroups([], raw);
+    expect(groups![0]!.id).toBe('military');
+    expect(groups![0]!.content).toBe('Military Events');
+  });
+
+  it('defaults content to String(id) when omitted', () => {
+    const raw: RawGroupItem[] = [{ id: 'military' }];
+    const groups = resolveGroups([], raw);
+    expect(groups![0]!.content).toBe('military');
+  });
+
+  it('defaults content to String(id) for numeric id', () => {
+    const raw: RawGroupItem[] = [{ id: 42 }];
+    const groups = resolveGroups([], raw);
+    expect(groups![0]!.content).toBe('42');
+  });
+
+  it('sets showNested to true by default for groups with nestedGroups', () => {
+    const raw: RawGroupItem[] = [
+      { id: 'parent', nestedGroups: ['child'] },
+      { id: 'child' },
+    ];
+    const groups = resolveGroups([], raw);
+    expect(groups![0]!.showNested).toBe(true);
+    expect(groups![1]!.showNested).toBeUndefined();
+  });
+
+  it('respects explicit showNested: false', () => {
+    const raw: RawGroupItem[] = [
+      { id: 'parent', nestedGroups: ['child'], showNested: false },
+      { id: 'child' },
+    ];
+    const groups = resolveGroups([], raw);
+    expect(groups![0]!.showNested).toBe(false);
+  });
+
+  it('passes nestedGroups through', () => {
+    const raw: RawGroupItem[] = [
+      { id: 'parent', nestedGroups: ['child'] },
+      { id: 'child' },
+    ];
+    const groups = resolveGroups([], raw);
+    expect(groups![0]!.nestedGroups).toEqual(['child']);
+  });
+
+  it('passes className through', () => {
+    const raw: RawGroupItem[] = [{ id: 'military', className: 'highlight' }];
+    const groups = resolveGroups([], raw);
+    expect(groups![0]!.className).toBe('highlight');
+  });
+
+  it('throws when id is missing', () => {
+    const raw = [{ content: 'No ID' }] as unknown as RawGroupItem[];
+    expect(() => resolveGroups([], raw)).toThrow('Group #1 is missing "id"');
+  });
+
+  it('throws when nestedGroups references an unknown id', () => {
+    const raw: RawGroupItem[] = [{ id: 'parent', nestedGroups: ['ghost'] }];
+    expect(() => resolveGroups([], raw)).toThrow(
+      'Group "parent" references unknown nested group "ghost"'
+    );
   });
 });
