@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml';
-import type { RawTimelineItem, BlockOptions, ParseResult } from './types';
+import type { RawTimelineItem, RawGroupItem, BlockOptions, ParseResult } from './types';
 
 export function parseBlock(source: string): ParseResult {
   let parsed: unknown;
@@ -25,6 +25,7 @@ export function parseBlock(source: string): ParseResult {
     }
     return {
       items: Array.isArray(obj.items) ? (obj.items as RawTimelineItem[]) : [],
+      groups: Array.isArray(obj.groups) ? (obj.groups as RawGroupItem[]) : undefined,
       options:
         typeof obj.options === 'object' && obj.options !== null
           ? (obj.options as BlockOptions)
