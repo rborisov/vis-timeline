@@ -59,4 +59,55 @@ start: "1066"
   it('throws for a bare scalar (YAML parses it as a string)', () => {
     expect(() => parseBlock('just a string')).toThrow();
   });
+
+  it('parses object form with a groups array', () => {
+    const source = `
+groups:
+  - id: military
+    content: Military Events
+  - id: political
+    content: Political Events
+items:
+  - content: Battle of Hastings
+    start: "1066-10-14"
+    group: military
+`.trim();
+    const result = parseBlock(source);
+    expect(result.groups).toHaveLength(2);
+    expect(result.groups![0]!.id).toBe('military');
+    expect(result.groups![0]!.content).toBe('Military Events');
+    expect(result.groups![1]!.id).toBe('political');
+  });
+
+  it('returns groups undefined when object form has no groups key', () => {
+    const source = `
+options:
+  height: 400px
+items:
+  - content: Battle of Hastings
+    start: "1066-10-14"
+`.trim();
+    const result = parseBlock(source);
+    expect(result.groups).toBeUndefined();
+  });
+
+  it('returns groups undefined for flat array form', () => {
+    const source = `
+- content: Battle of Hastings
+  start: "1066-10-14"
+  group: military
+`.trim();
+    const result = parseBlock(source);
+    expect(result.groups).toBeUndefined();
+  });
+
+  it('parses JSON object form with groups', () => {
+    const source = JSON.stringify({
+      groups: [{ id: 'military', content: 'Military Events' }],
+      items: [{ content: 'Battle of Hastings', start: '1066', group: 'military' }],
+    });
+    const result = parseBlock(source);
+    expect(result.groups).toHaveLength(1);
+    expect(result.groups![0]!.id).toBe('military');
+  });
 });
