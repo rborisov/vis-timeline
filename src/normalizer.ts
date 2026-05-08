@@ -1,4 +1,4 @@
-import type { RawTimelineItem, NormalizedTimelineItem } from './types';
+import type { RawTimelineItem, NormalizedTimelineItem, RawGroupItem, NormalizedGroup } from './types';
 
 // Matches: "-490", "-490-09-12"
 const NEGATIVE_YEAR_RE = /^(-\d+)(?:-(\d{1,2})(?:-(\d{1,2}))?)?$/;
@@ -112,4 +112,28 @@ export function normalizeItem(raw: unknown, index: number): NormalizedTimelineIt
   if (item.group !== undefined) normalized.group = item.group as string | number;
 
   return normalized;
+}
+
+export function resolveGroups(
+  items: NormalizedTimelineItem[],
+  rawGroups?: RawGroupItem[]
+): NormalizedGroup[] | undefined {
+  if (rawGroups !== undefined) {
+    return resolveExplicit(rawGroups);
+  }
+  return resolveAutoInfer(items);
+}
+
+function resolveAutoInfer(items: NormalizedTimelineItem[]): NormalizedGroup[] | undefined {
+  const seen = new Map<string | number, NormalizedGroup>();
+  for (const item of items) {
+    if (item.group !== undefined && !seen.has(item.group)) {
+      seen.set(item.group, { id: item.group, content: String(item.group) });
+    }
+  }
+  return seen.size > 0 ? Array.from(seen.values()) : undefined;
+}
+
+function resolveExplicit(_rawGroups: RawGroupItem[]): NormalizedGroup[] | undefined {
+  throw new Error('resolveExplicit not yet implemented');
 }

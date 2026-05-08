@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseBceDate, formatHistoricalYear, normalizeItem } from './normalizer';
+import { parseBceDate, formatHistoricalYear, normalizeItem, resolveGroups } from './normalizer';
 
 describe('parseBceDate', () => {
   it('returns null for a CE year string', () => {
@@ -120,5 +120,51 @@ describe('normalizeItem', () => {
     expect(item.className).toBe('custom');
     expect(item.type).toBe('point');
     expect(item.group).toBe('politics');
+  });
+});
+
+describe('resolveGroups (auto-infer)', () => {
+  it('returns undefined when no items have a group field', () => {
+    const items = [
+      { content: 'A', start: '1066' as const },
+      { content: 'B', start: '1215' as const },
+    ];
+    expect(resolveGroups(items)).toBeUndefined();
+  });
+
+  it('returns undefined for an empty items list', () => {
+    expect(resolveGroups([])).toBeUndefined();
+  });
+
+  it('infers groups in first-occurrence order, deduped', () => {
+    const items = [
+      { content: 'A', start: '1066' as const, group: 'military' as const },
+      { content: 'B', start: '1215' as const, group: 'political' as const },
+      { content: 'C', start: '1400' as const, group: 'military' as const },
+    ];
+    const groups = resolveGroups(items);
+    expect(groups).toHaveLength(2);
+    expect(groups![0]!.id).toBe('military');
+    expect(groups![0]!.content).toBe('military');
+    expect(groups![1]!.id).toBe('political');
+    expect(groups![1]!.content).toBe('political');
+  });
+
+  it('handles numeric group ids', () => {
+    const items = [{ content: 'A', start: '1066' as const, group: 1 }];
+    const groups = resolveGroups(items);
+    expect(groups).toHaveLength(1);
+    expect(groups![0]!.id).toBe(1);
+    expect(groups![0]!.content).toBe('1');
+  });
+
+  it('skips items without a group field', () => {
+    const items = [
+      { content: 'A', start: '1066' as const },
+      { content: 'B', start: '1215' as const, group: 'political' as const },
+    ];
+    const groups = resolveGroups(items);
+    expect(groups).toHaveLength(1);
+    expect(groups![0]!.id).toBe('political');
   });
 });
