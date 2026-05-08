@@ -136,11 +136,28 @@ function resolveAutoInfer(items: NormalizedTimelineItem[]): NormalizedGroup[] | 
 
 function resolveExplicit(rawGroups: RawGroupItem[]): NormalizedGroup[] | undefined {
   if (rawGroups.length === 0) return undefined;
-  const ids = new Set(rawGroups.map(g => g.id));
-  return rawGroups.map((g, i) => {
-    if (g.id == null) {
+
+  // Validate ids before building the Set so null/undefined never enters it
+  for (let i = 0; i < rawGroups.length; i++) {
+    if (rawGroups[i]!.id == null) {
       throw new Error(`Group #${i + 1} is missing "id".`);
     }
+  }
+
+  const ids = new Set(rawGroups.map(g => g.id));
+
+  // Detect duplicate ids
+  if (ids.size < rawGroups.length) {
+    const seen = new Set<string | number>();
+    for (const g of rawGroups) {
+      if (seen.has(g.id)) {
+        throw new Error(`Duplicate group id "${g.id}".`);
+      }
+      seen.add(g.id);
+    }
+  }
+
+  return rawGroups.map((g) => {
     if (g.nestedGroups) {
       for (const childId of g.nestedGroups) {
         if (!ids.has(childId)) {
