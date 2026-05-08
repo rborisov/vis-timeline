@@ -54,14 +54,13 @@ function isBceString(value: string): boolean {
   return NEGATIVE_YEAR_RE.test(value.trim()) || BCE_SUFFIX_RE.test(value.trim());
 }
 
-// Matches CE dates with a 1-3 digit year: "330", "476", "330-06-15"
-const SHORT_CE_YEAR_RE = /^(\d{1,3})(?:-(\d{1,2})(?:-(\d{1,2}))?)?$/;
+// Matches CE dates: "330", "1325", "1066-10-14", "2024-01-15"
+// moment.js misparses 4-digit year-only strings as HHmm time (e.g. "1325" → 13:25 today).
+// Convert all simple CE date strings to Date objects via setUTCFullYear to bypass moment.
+const CE_DATE_RE = /^(\d{1,4})(?:-(\d{1,2})(?:-(\d{1,2}))?)?$/;
 
-// moment.js cannot reliably parse years < 1000. Convert to a Date object
-// using setUTCFullYear (same as BCE path) to bypass moment entirely.
-// 4+ digit years ("1066", "2024") pass through as strings — moment handles those.
 function normalizeCeDate(value: string): string | Date {
-  const match = SHORT_CE_YEAR_RE.exec(value.trim());
+  const match = CE_DATE_RE.exec(value.trim());
   if (!match) return value;
   const year  = parseInt(match[1] ?? '1', 10);
   const month = match[2] ? parseInt(match[2], 10) : 1;
