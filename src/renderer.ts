@@ -16,7 +16,7 @@ export async function renderTimeline(
   const merged = { ...DEFAULT_OPTIONS, ...options };
 
   const container = el.createEl('div');
-  container.className = 'vis-timeline-plugin';
+  container.className = 'timeline-plugin';
   container.style.width = '100%';
   container.style.height = merged.height;
   container.style.minHeight = '300px';

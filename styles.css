@@ -1,0 +1,104 @@
+/* ================================
+   vis-timeline Plugin — Base Styles
+   ================================ */
+
+.timeline-plugin {
+  --timeline-bg: var(--background-primary);
+  --timeline-text: var(--text-normal);
+  --timeline-border: var(--background-modifier-border);
+  --timeline-line: var(--background-modifier-border);
+  color: var(--timeline-text);
+  font-family: inherit;
+}
+
+/* Outer container */
+.timeline-plugin .vis-timeline {
+  border: 1px solid var(--timeline-border);
+  border-radius: 8px;
+  background: var(--timeline-bg);
+  overflow: hidden;
+}
+
+/* Axis panel borders */
+.timeline-plugin .vis-panel.vis-center,
+.timeline-plugin .vis-panel.vis-left,
+.timeline-plugin .vis-panel.vis-right {
+  border-color: var(--timeline-border);
+}
+
+/* Axis labels */
+.timeline-plugin .vis-time-axis .vis-text {
+  color: var(--text-muted);
+  font-size: 0.82em;
+}
+
+/* Grid lines */
+.timeline-plugin .vis-grid.vis-major,
+.timeline-plugin .vis-grid.vis-minor {
+  border-color: var(--timeline-line);
+  opacity: 0.4;
+}
+
+/* All items — default look */
+.timeline-plugin .vis-item {
+  background: var(--interactive-accent);
+  border-color: var(--interactive-accent);
+  border-radius: 6px;
+  border-width: 1px;
+  color: white;
+  font-size: 0.88em;
+  font-weight: 600;
+  padding: 3px 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: filter 0.12s ease, transform 0.12s ease;
+}
+
+.timeline-plugin .vis-item .vis-item-content {
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hover */
+.timeline-plugin .vis-item:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  z-index: 3;
+}
+
+/* Range items */
+.timeline-plugin .vis-item.vis-range {
+  border-radius: 6px;
+}
+
+/* Point items */
+.timeline-plugin .vis-item.vis-point .vis-dot {
+  border-color: var(--interactive-accent);
+  border-width: 3px;
+}
+
+/* Background items */
+.timeline-plugin .vis-item.vis-background {
+  background: rgba(100, 116, 139, 0.1);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+/* Selected */
+.timeline-plugin .vis-item.vis-selected {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  z-index: 2;
+}
+
+/* Tooltip cursor */
+.timeline-plugin .vis-item[title] {
+  cursor: help;
+}
+
+/* Dark mode shadow boost */
+.theme-dark .timeline-plugin .vis-item {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
