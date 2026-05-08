@@ -134,6 +134,31 @@ function resolveAutoInfer(items: NormalizedTimelineItem[]): NormalizedGroup[] | 
   return seen.size > 0 ? Array.from(seen.values()) : undefined;
 }
 
-function resolveExplicit(_rawGroups: RawGroupItem[]): NormalizedGroup[] | undefined {
-  throw new Error('resolveExplicit not yet implemented');
+function resolveExplicit(rawGroups: RawGroupItem[]): NormalizedGroup[] | undefined {
+  if (rawGroups.length === 0) return undefined;
+  const ids = new Set(rawGroups.map(g => g.id));
+  return rawGroups.map((g, i) => {
+    if (g.id == null) {
+      throw new Error(`Group #${i + 1} is missing "id".`);
+    }
+    if (g.nestedGroups) {
+      for (const childId of g.nestedGroups) {
+        if (!ids.has(childId)) {
+          throw new Error(`Group "${g.id}" references unknown nested group "${childId}".`);
+        }
+      }
+    }
+    const normalized: NormalizedGroup = {
+      id: g.id,
+      content: g.content !== undefined ? g.content : String(g.id),
+    };
+    if (g.nestedGroups !== undefined) {
+      normalized.nestedGroups = g.nestedGroups;
+      normalized.showNested = g.showNested !== undefined ? g.showNested : true;
+    } else if (g.showNested !== undefined) {
+      normalized.showNested = g.showNested;
+    }
+    if (g.className !== undefined) normalized.className = g.className;
+    return normalized;
+  });
 }
