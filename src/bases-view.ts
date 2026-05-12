@@ -1,5 +1,5 @@
 import { BasesView, NullValue, QueryController, TFile } from 'obsidian';
-import type { BasesPropertyId, ViewOption } from 'obsidian';
+import type { BasesAllOptions, BasesPropertyId, BasesViewConfig } from 'obsidian';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import type { NormalizedTimelineItem } from './types';
@@ -87,7 +87,7 @@ export class BasesTimelineView extends BasesView {
     const groups = resolveGroups(normalized);
     this.tl = renderTimeline(this.el, normalized, {}, groups, (id) => {
       const file = this.fileMap.get(String(id));
-      if (file) this.app.workspace.getLeaf().openFile(file);
+      if (file) void this.app.workspace.getLeaf().openFile(file);
     });
   }
 
@@ -99,7 +99,7 @@ export class BasesTimelineView extends BasesView {
   }
 }
 
-export function getBasesTimelineOptions(): ViewOption[] {
+export function getBasesTimelineOptions(_config: BasesViewConfig): BasesAllOptions[] {
   return [
     {
       type: 'property',

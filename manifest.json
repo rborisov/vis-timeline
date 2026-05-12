@@ -2,7 +2,7 @@
 	"id": "vis-timeline",
 	"name": "Timeline (vis-timeline)",
 	"version": "0.3.4",
-	"minAppVersion": "0.14.0",
+	"minAppVersion": "1.10.0",
 	"description": "Render interactive timelines in notes. Supports BCE/CE historical dates, YAML authoring, and row groups with nesting.",
 	"author": "rborisov",
 	"authorUrl": "https://github.com/rborisov",

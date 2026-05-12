@@ -1,5 +1,4 @@
-export interface TimelineBlockSettings {
-  // configurable defaults land in v0.2.0
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface TimelineBlockSettings {}
 
 export const DEFAULT_SETTINGS: TimelineBlockSettings = {};

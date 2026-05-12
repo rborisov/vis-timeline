@@ -34,7 +34,7 @@ export default class VisTimelinePlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<TimelineBlockSettings>);
   }
 
   async saveSettings() {

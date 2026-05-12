@@ -4,24 +4,25 @@ import globals from "globals";
 import { globalIgnores } from "eslint/config";
 
 export default tseslint.config(
+	...obsidianmd.configs.recommended,
 	{
+		files: ["**/*.ts"],
 		languageOptions: {
 			globals: {
 				...globals.browser,
 			},
+			parser: tseslint.parser,
 			parserOptions: {
-				projectService: {
-					allowDefaultProject: [
-						'eslint.config.js',
-						'manifest.json'
-					]
-				},
+				project: "./tsconfig.json",
 				tsconfigRootDir: import.meta.dirname,
-				extraFileExtensions: ['.json']
 			},
 		},
 	},
-	...obsidianmd.configs.recommended,
+	{
+		// no-plugin-as-component is a type-aware TS rule; disable it for JSON files
+		files: ["**/*.json"],
+		rules: { "obsidianmd/no-plugin-as-component": "off" },
+	},
 	globalIgnores([
 		"node_modules",
 		"dist",
@@ -30,5 +31,6 @@ export default tseslint.config(
 		"version-bump.mjs",
 		"versions.json",
 		"main.js",
+		"**/*.json",
 	]),
 );
