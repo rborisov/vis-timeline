@@ -14,6 +14,12 @@ describe('buildImageContent', () => {
     const html = buildImageContent('<b>Bold</b>', 'https://x.com/img.jpg');
     expect(html).toContain('<b>Bold</b>');
   });
+
+  it('escapes double-quotes in src to prevent attribute breakout', () => {
+    const html = buildImageContent('Test', 'app://local/path/a"b.jpg');
+    expect(html).toContain('src="app://local/path/a%22b.jpg"');
+    expect(html).not.toContain('"b.jpg"');
+  });
 });
 
 describe('resolveImageSrc', () => {

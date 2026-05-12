@@ -33,7 +33,7 @@ export class BasesTimelineView extends BasesView {
     const endProp = this.config.getAsPropertyId('endProp') ?? DEFAULT_END_PROP;
     const contentProp = this.config.getAsPropertyId('contentProp');
     const groupProp = this.config.getAsPropertyId('groupProp') ?? DEFAULT_GROUP_PROP;
-    const imageProp = this.config.getAsPropertyId('imageProp') ?? ('note.image' as BasesPropertyId);
+    const imageProp = this.config.getAsPropertyId('imageProp');
 
     const normalized: NormalizedTimelineItem[] = [];
 
@@ -59,8 +59,10 @@ export class BasesTimelineView extends BasesView {
       const vGroup = entry.getValue(groupProp);
       if (vGroup && !(vGroup instanceof NullValue)) raw.group = vGroup.toString();
 
-      const vImage = entry.getValue(imageProp);
-      if (vImage && !(vImage instanceof NullValue)) raw.image = vImage.toString();
+      if (imageProp) {
+        const vImage = entry.getValue(imageProp!);
+        if (vImage && !(vImage instanceof NullValue)) raw.image = vImage.toString();
+      }
 
       // Read display fields by their standard vis-timeline names — no config needed
       for (const field of ['type', 'className', 'title'] as const) {
