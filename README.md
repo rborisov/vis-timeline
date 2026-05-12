@@ -44,6 +44,47 @@ items:
 ```
 ````
 
+### Groups
+
+Assign items to labelled rows using `groups` and `group` on each item:
+
+````markdown
+```vis-timeline
+groups:
+  - id: military
+    content: Military
+  - id: political
+    content: Political
+items:
+  - content: Battle of Hastings
+    start: "1066-10-14"
+    group: military
+  - content: Norman Conquest
+    start: "1066"
+    end: "1072"
+    group: political
+```
+````
+
+Nest groups with `nestedGroups` (a list of child group IDs):
+
+````markdown
+```vis-timeline
+groups:
+  - id: europe
+    content: Europe
+    nestedGroups: [uk, france]
+  - id: uk
+    content: United Kingdom
+  - id: france
+    content: France
+items:
+  - content: Magna Carta
+    start: "1215"
+    group: uk
+```
+````
+
 ## Date formats
 
 | Input              | Meaning            |
@@ -69,7 +110,7 @@ CE dates are passed directly to vis-timeline. BCE dates are converted internally
 | `type`      | string | `point`, `box`, or `range`                  |
 | `className` | string | CSS class for custom styling                |
 | `title`     | string | Tooltip. Auto-generated for BCE items.      |
-| `group`     | string | Row grouping — available in v0.2.0          |
+| `group`     | string | Row grouping — matches a group `id`         |
 
 ## Options
 
@@ -83,7 +124,7 @@ CE dates are passed directly to vis-timeline. BCE dates are converted internally
 
 ## Roadmap
 
-- **v0.2.0** — Settings panel for global defaults, groups/subgroups, background items, locale
+- **v0.3.0** — Settings panel for global defaults, background items, locale
 
 ## License
 
