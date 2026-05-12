@@ -155,6 +155,8 @@ Configure which note properties to use via the view options panel:
 
 If Bases is not enabled in the vault, the view type registration is silently skipped.
 
+A ready-to-use example set of notes and a `.base` file is in [`docs/examples/medieval-europe-bases/`](docs/examples/medieval-europe-bases/).
+
 ## Roadmap
 
 - **v0.3.0** — Settings panel for global defaults, locale
