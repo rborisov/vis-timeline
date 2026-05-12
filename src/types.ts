@@ -10,6 +10,7 @@ export interface RawTimelineItem {
 }
 
 export interface NormalizedTimelineItem {
+  id?: string | number;
   content: string;
   start: Date | string;
   end?: Date | string;

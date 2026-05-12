@@ -1,4 +1,4 @@
-import { BasesView, NullValue, QueryController } from 'obsidian';
+import { BasesView, NullValue, QueryController, TFile } from 'obsidian';
 import type { BasesPropertyId, ViewOption } from 'obsidian';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
@@ -11,6 +11,7 @@ export class BasesTimelineView extends BasesView {
 
   private el: HTMLElement;
   private tl: { destroy(): void } | null = null;
+  private fileMap = new Map<string, TFile>();
 
   constructor(controller: QueryController, containerEl: HTMLElement) {
     super(controller);
@@ -23,6 +24,7 @@ export class BasesTimelineView extends BasesView {
       this.tl.destroy();
       this.tl = null;
     }
+    this.fileMap.clear();
 
     const startProp = this.config.getAsPropertyId('startProp') ?? DEFAULT_START_PROP;
     const endProp = this.config.getAsPropertyId('endProp');
@@ -36,6 +38,7 @@ export class BasesTimelineView extends BasesView {
       if (!startVal || startVal instanceof NullValue) continue;
 
       const raw: Record<string, unknown> = {
+        id: entry.file.path,
         start: startVal.toString(),
         content: (() => {
           if (contentProp) {
@@ -57,7 +60,9 @@ export class BasesTimelineView extends BasesView {
       }
 
       try {
-        normalized.push(normalizeItem(raw, normalized.length));
+        const item = normalizeItem(raw, normalized.length);
+        this.fileMap.set(entry.file.path, entry.file);
+        normalized.push(item);
       } catch {
         // skip items whose dates cannot be parsed
       }
@@ -72,7 +77,10 @@ export class BasesTimelineView extends BasesView {
     }
 
     const groups = resolveGroups(normalized);
-    this.tl = renderTimeline(this.el, normalized, {}, groups);
+    this.tl = renderTimeline(this.el, normalized, {}, groups, (id) => {
+      const file = this.fileMap.get(String(id));
+      if (file) this.app.workspace.getLeaf().openFile(file);
+    });
   }
 
   override onunload(): void {

@@ -105,6 +105,7 @@ export function normalizeItem(raw: unknown, index: number): NormalizedTimelineIt
   }
 
   const normalized: NormalizedTimelineItem = { content, start };
+  if (item.id !== undefined) normalized.id = item.id as string | number;
   if (end !== undefined) normalized.end = end;
   if (title) normalized.title = title;
   if (item.className) normalized.className = String(item.className);

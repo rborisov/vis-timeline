@@ -13,7 +13,8 @@ export function renderTimeline(
   el: HTMLElement,
   items: NormalizedTimelineItem[],
   options: BlockOptions = {},
-  groups?: NormalizedGroup[]
+  groups?: NormalizedGroup[],
+  onItemClick?: (id: string | number) => void
 ): { destroy(): void } {
   const merged = { ...DEFAULT_OPTIONS, ...options };
 
@@ -25,7 +26,7 @@ export function renderTimeline(
 
   const TimelineConstructor = Timeline as unknown as new (
     ...args: unknown[]
-  ) => { destroy(): void; redraw(): void };
+  ) => { destroy(): void; redraw(): void; on(event: string, cb: (props: { item?: string | number | null; what?: string }) => void): void };
 
   const visOptions = {
     editable: false,
@@ -40,6 +41,14 @@ export function renderTimeline(
   const tl = groups !== undefined
     ? new TimelineConstructor(container, items, groups, visOptions)
     : new TimelineConstructor(container, items, visOptions);
+
+  if (onItemClick) {
+    tl.on('click', (props) => {
+      if (props?.what === 'item' && props.item != null) {
+        onItemClick(props.item);
+      }
+    });
+  }
 
   // Force a redraw after the next layout pass so vis-timeline gets real
   // container dimensions. Without this, iOS renders into a zero-size box.
