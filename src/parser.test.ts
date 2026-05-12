@@ -110,4 +110,23 @@ items:
     expect(result.groups).toHaveLength(1);
     expect(result.groups![0]!.id).toBe('military');
   });
+
+  it('returns empty groups array when groups key is an empty array', () => {
+    const source = 'groups: []\nitems: []';
+    const result = parseBlock(source);
+    expect(result.groups).toEqual([]);
+  });
+
+  it('ignores non-array groups value', () => {
+    const source = 'groups: "invalid"\nitems: []';
+    const result = parseBlock(source);
+    expect(result.groups).toBeUndefined();
+  });
+
+  it('filters out null entries in groups array', () => {
+    const source = 'groups:\n  - id: military\n  - null\nitems: []';
+    const result = parseBlock(source);
+    expect(result.groups).toHaveLength(1);
+    expect(result.groups![0]!.id).toBe('military');
+  });
 });

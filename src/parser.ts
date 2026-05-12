@@ -25,7 +25,7 @@ export function parseBlock(source: string): ParseResult {
     }
     return {
       items: Array.isArray(obj.items) ? (obj.items as RawTimelineItem[]) : [],
-      groups: Array.isArray(obj.groups) ? (obj.groups as RawGroupItem[]) : undefined,
+      groups: Array.isArray(obj.groups) ? (obj.groups as RawGroupItem[]).filter(Boolean) : undefined,
       options:
         typeof obj.options === 'object' && obj.options !== null
           ? (obj.options as BlockOptions)
