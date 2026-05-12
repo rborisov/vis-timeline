@@ -5,6 +5,8 @@ import { renderTimeline } from './renderer';
 import type { NormalizedTimelineItem } from './types';
 
 const DEFAULT_START_PROP = 'note.start' as BasesPropertyId;
+const DEFAULT_END_PROP = 'note.end' as BasesPropertyId;
+const DEFAULT_GROUP_PROP = 'note.group' as BasesPropertyId;
 
 export class BasesTimelineView extends BasesView {
   type = 'vis-timeline';
@@ -27,9 +29,9 @@ export class BasesTimelineView extends BasesView {
     this.fileMap.clear();
 
     const startProp = this.config.getAsPropertyId('startProp') ?? DEFAULT_START_PROP;
-    const endProp = this.config.getAsPropertyId('endProp');
+    const endProp = this.config.getAsPropertyId('endProp') ?? DEFAULT_END_PROP;
     const contentProp = this.config.getAsPropertyId('contentProp');
-    const groupProp = this.config.getAsPropertyId('groupProp');
+    const groupProp = this.config.getAsPropertyId('groupProp') ?? DEFAULT_GROUP_PROP;
 
     const normalized: NormalizedTimelineItem[] = [];
 
@@ -49,15 +51,11 @@ export class BasesTimelineView extends BasesView {
         })(),
       };
 
-      if (endProp) {
-        const v = entry.getValue(endProp);
-        if (v && !(v instanceof NullValue)) raw.end = v.toString();
-      }
+      const vEnd = entry.getValue(endProp);
+      if (vEnd && !(vEnd instanceof NullValue)) raw.end = vEnd.toString();
 
-      if (groupProp) {
-        const v = entry.getValue(groupProp);
-        if (v && !(v instanceof NullValue)) raw.group = v.toString();
-      }
+      const vGroup = entry.getValue(groupProp);
+      if (vGroup && !(vGroup instanceof NullValue)) raw.group = vGroup.toString();
 
       // Read display fields by their standard vis-timeline names — no config needed
       for (const field of ['type', 'className', 'title'] as const) {

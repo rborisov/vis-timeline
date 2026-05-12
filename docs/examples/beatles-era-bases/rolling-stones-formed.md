@@ -1,5 +1,5 @@
 ---
-start: 1962-07
+start: "1962-07"
 group: industry
 title: Blues-rooted rivals to the Beatles who outlasted them by decades
 ---

@@ -1,5 +1,5 @@
 ---
-start: 1959
+start: "1959"
 group: industry
 title: Berry Gordy's Detroit label brought Black pop music to mainstream radio
 ---

@@ -1,5 +1,5 @@
 ---
-start: 1968-01
+start: "1968-01"
 group: industry
 title: The Beatles' own label — a noble experiment in artist-led music business
 ---

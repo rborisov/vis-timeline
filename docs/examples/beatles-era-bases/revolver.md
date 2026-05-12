@@ -1,5 +1,5 @@
 ---
-start: 1966-08-05
+start: "1966-08-05"
 group: beatles-album
 className: landmark
 title: Widely ranked the greatest album ever made

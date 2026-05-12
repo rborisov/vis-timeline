@@ -1,6 +1,6 @@
 ---
-start: 1964
-end: 1967
+start: "1964"
+end: "1967"
 group: industry
 className: landmark
 title: British acts dominate US charts — the Beatles lead the way

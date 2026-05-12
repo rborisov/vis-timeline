@@ -1,5 +1,5 @@
 ---
-start: 1964-07-10
+start: "1964-07-10"
 group: beatles-album
 title: First album composed entirely of Lennon–McCartney originals
 ---

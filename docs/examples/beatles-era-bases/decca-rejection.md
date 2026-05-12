@@ -1,5 +1,5 @@
 ---
-start: 1962-01-01
+start: "1962-01-01"
 group: beatles-event
 title: Decca Records rejects the Beatles — "Guitar groups are on the way out"
 ---

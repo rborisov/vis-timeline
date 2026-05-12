@@ -1,5 +1,5 @@
 ---
-start: 1963-03-22
+start: "1963-03-22"
 group: beatles-album
 title: Recorded in a single day for £400
 ---

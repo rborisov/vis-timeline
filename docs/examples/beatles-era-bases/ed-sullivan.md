@@ -1,5 +1,5 @@
 ---
-start: 1964-02-09
+start: "1964-02-09"
 group: beatles-event
 className: landmark
 title: 73 million viewers — the most-watched US TV broadcast to that date

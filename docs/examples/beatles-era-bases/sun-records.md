@@ -1,5 +1,5 @@
 ---
-start: 1952
+start: "1952"
 group: industry
 title: Sam Phillips' Memphis label that launched Elvis, Johnny Cash, and Jerry Lee Lewis
 ---

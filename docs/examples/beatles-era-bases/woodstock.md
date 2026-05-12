@@ -1,6 +1,6 @@
 ---
-start: 1969-08-15
-end: 1969-08-18
+start: "1969-08-15"
+end: "1969-08-18"
 group: industry
 className: landmark
 title: 400,000 people — the high-water mark of the counterculture

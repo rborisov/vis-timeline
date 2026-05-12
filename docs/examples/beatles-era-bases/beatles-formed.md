@@ -1,5 +1,5 @@
 ---
-start: 1960-08
+start: "1960-08"
 group: beatles-event
 title: The Beatles form in Liverpool, August 1960
 ---

@@ -1,5 +1,5 @@
 ---
-start: 1967-06-01
+start: "1967-06-01"
 group: beatles-album
 className: landmark
 title: The first album to win the Grammy for Album of the Year

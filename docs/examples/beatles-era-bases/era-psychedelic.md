@@ -1,6 +1,6 @@
 ---
-start: 1966
-end: 1970
+start: "1966"
+end: "1970"
 type: background
 className: era-psychedelic
 title: Psychedelic Era (1966–1970)

@@ -1,5 +1,5 @@
 ---
-start: 1970-04-10
+start: "1970-04-10"
 group: beatles-event
 title: Paul McCartney announces he is leaving the Beatles
 ---

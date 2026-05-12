@@ -1,5 +1,5 @@
 ---
-start: 1968-11-22
+start: "1968-11-22"
 group: beatles-album
 title: A double album of 30 tracks recorded amid growing tension within the band
 ---

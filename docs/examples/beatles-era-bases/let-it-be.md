@@ -1,5 +1,5 @@
 ---
-start: 1970-05-08
+start: "1970-05-08"
 group: beatles-album
 title: Released one month after the band's breakup
 ---

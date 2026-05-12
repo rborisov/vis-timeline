@@ -1,5 +1,5 @@
 ---
-start: 1966-08-29
+start: "1966-08-29"
 group: beatles-event
 title: Candlestick Park, San Francisco — the Beatles' final paid concert
 ---

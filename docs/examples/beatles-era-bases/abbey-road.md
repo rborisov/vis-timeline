@@ -1,5 +1,5 @@
 ---
-start: 1969-09-26
+start: "1969-09-26"
 group: beatles-album
 className: landmark
 title: The last album recorded by the Beatles, featuring the iconic zebra crossing cover

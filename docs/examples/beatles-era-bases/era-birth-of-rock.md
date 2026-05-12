@@ -1,6 +1,6 @@
 ---
-start: 1954
-end: 1962
+start: "1954"
+end: "1962"
 type: background
 className: era-rock
 title: Birth of Rock 'n' Roll (1954–1962)

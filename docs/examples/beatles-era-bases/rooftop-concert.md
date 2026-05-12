@@ -1,5 +1,5 @@
 ---
-start: 1969-01-30
+start: "1969-01-30"
 group: beatles-event
 className: landmark
 title: The Beatles' final live performance, on the roof of Apple Corps, London

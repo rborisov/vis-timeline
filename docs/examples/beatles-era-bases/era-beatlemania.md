@@ -1,6 +1,6 @@
 ---
-start: 1963
-end: 1966
+start: "1963"
+end: "1966"
 type: background
 className: era-beatlemania
 title: Beatlemania (1963–1966)
