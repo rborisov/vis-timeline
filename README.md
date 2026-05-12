@@ -1,17 +1,17 @@
 # Timeline (vis-timeline)
 
-An [Obsidian](https://obsidian.md) plugin for rendering interactive timelines in your notes. Powered by [vis-timeline](https://visjs.github.io/vis-timeline/). Supports historical BCE/CE dates and YAML authoring.
+An [Obsidian](https://obsidian.md) plugin for rendering interactive timelines in your notes. Powered by [vis-timeline](https://visjs.github.io/vis-timeline/). Supports historical BCE/CE dates, YAML authoring, row groups, and Obsidian Bases.
 
 ## Installation
+
+### Community plugins
+
+Search **Timeline (vis-timeline)** in Settings → Community plugins.
 
 ### BRAT (early access)
 
 1. Install the [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin.
 2. Run **BRAT: Add a beta plugin** and enter `rborisov/vis-timeline`.
-
-### Community plugins
-
-Coming soon — submission pending review.
 
 ## Usage
 
@@ -87,7 +87,7 @@ items:
 
 ### Background items
 
-Shade a time range behind other items using `type: background`. The `content` field is optional and renders as overlay text on the band. Add `group` to confine the shading to a single row.
+Shade a time range behind other items using `type: background`. Add `group` to confine the shading to a single row.
 
 ````markdown
 ```vis-timeline
@@ -96,7 +96,6 @@ items:
     end: "1453"
     type: background
     className: war
-    content: Hundred Years' War
 
   - content: Battle of Agincourt
     start: "1415-10-25"
@@ -142,20 +141,40 @@ CE dates are passed directly to vis-timeline. BCE dates are converted internally
 
 ## Obsidian Bases
 
-The plugin registers a **Timeline** view type for [Obsidian Bases](https://obsidian.md/help/bases) (Obsidian 1.10+). Add a `start` property to your notes, create a `.base` file, and switch to the Timeline view to see all matching notes rendered as an interactive timeline.
+The plugin registers a **Timeline** view type for [Obsidian Bases](https://obsidian.md/help/bases) (Obsidian 1.10+). Add a `start` property to your notes, create a `.base` file, and switch to the Timeline view.
 
-Configure which note properties to use via the view options panel:
+The following note properties are read automatically — no view-option configuration needed:
 
-| Option | Default | Notes |
-| --- | --- | --- |
-| Start date | `start` | Required. Any supported date format. |
-| End date | — | Optional. Makes the item a range. |
-| Label | file name | Displayed on the item. |
-| Group | — | Optional. Groups items into rows. |
+| Property    | Behaviour in the Timeline view                      |
+| ----------- | --------------------------------------------------- |
+| `start`     | Required. Item start date.                          |
+| `end`       | Optional. Makes the item a range.                   |
+| `group`     | Optional. Assigns the item to a row.                |
+| `type`      | `background` shades a time range behind all items.  |
+| `className` | CSS class applied to the item for custom styling.   |
+| `title`     | Tooltip text shown on hover.                        |
 
-Clicking a timeline item opens the corresponding note. If Bases is not enabled in the vault, the view type registration is silently skipped.
+The **Start date**, **End date**, **Label**, and **Group** fields in the view-options panel let you override which property is used for each role.
 
-A ready-to-use example set of notes and a `.base` file is in [`docs/examples/medieval-europe-bases/`](docs/examples/medieval-europe-bases/).
+Clicking a timeline item opens the corresponding note.
+
+A ready-to-use example with 20 notes covering the Beatles era is in [`docs/examples/beatles-era-bases/`](docs/examples/beatles-era-bases/). It demonstrates point events, range events, groups, background shading, custom CSS classes, and tooltips.
+
+## CSS customisation
+
+Items accept any `className` value. Target items with `.timeline-plugin .vis-item.your-class`:
+
+```css
+.timeline-plugin .vis-item.landmark {
+  background-color: #7c3aed;
+  border-color: #5b21b6;
+  color: #fff;
+}
+
+.vis-item.vis-background.era-rock {
+  background: rgba(239, 68, 68, 0.08);
+}
+```
 
 ## Changelog
 
@@ -165,10 +184,13 @@ A ready-to-use example set of notes and a `.base` file is in [`docs/examples/med
 | **0.2.0** | Groups and subgroups, `nestedGroups`, auto-inferred groups |
 | **0.3.0** | Background items (`type: background`), Obsidian Bases timeline view |
 | **0.3.1** | Click item in Bases view to open the note |
+| **0.3.2** | Bases view reads `type`, `className`, `title` from note frontmatter; Beatles era example |
+| **0.3.3** | Bases view defaults `end`/`group` to `note.end`/`note.group` — no view-option setup needed |
+| **0.3.4** | Background items no longer block clicks or render text that overlaps events |
 
 ## Roadmap
 
-- **v0.4.0** — Settings panel for global defaults, locale/date formatting, community plugin submission
+- **v0.4.0** — Settings panel for global defaults, locale/date formatting
 
 ## License
 
