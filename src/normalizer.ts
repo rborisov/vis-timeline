@@ -100,7 +100,7 @@ export function normalizeItem(raw: unknown, index: number): NormalizedTimelineIt
     : undefined;
 
   let title = typeof item.title === 'string' ? item.title : undefined;
-  if (!title && start instanceof Date) {
+  if (!title && start instanceof Date && item.type !== 'background') {
     title = `${formatHistoricalYear(start)}: ${stripHtml(content)}`;
   }
 

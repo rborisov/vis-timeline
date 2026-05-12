@@ -85,6 +85,24 @@ items:
 ```
 ````
 
+### Background items
+
+Shade a time range behind other items using `type: background`. The `content` field is optional and renders as overlay text on the band. Add `group` to confine the shading to a single row.
+
+````markdown
+```vis-timeline
+items:
+  - start: "1337"
+    end: "1453"
+    type: background
+    className: war
+    content: Hundred Years' War
+
+  - content: Battle of Agincourt
+    start: "1415-10-25"
+```
+````
+
 ## Date formats
 
 | Input              | Meaning            |
@@ -107,7 +125,7 @@ CE dates are passed directly to vis-timeline. BCE dates are converted internally
 | `content`   | string | Label shown on the item                     |
 | `start`     | string | Required. CE or BCE date string.            |
 | `end`       | string | Optional. Makes the item a range.           |
-| `type`      | string | `point`, `box`, or `range`                  |
+| `type`      | string | `point`, `box`, `range`, or `background`    |
 | `className` | string | CSS class for custom styling                |
 | `title`     | string | Tooltip. Auto-generated for BCE items.      |
 | `group`     | string | Row grouping — matches a group `id`         |
@@ -124,7 +142,7 @@ CE dates are passed directly to vis-timeline. BCE dates are converted internally
 
 ## Roadmap
 
-- **v0.3.0** — Settings panel for global defaults, background items, locale
+- **v0.3.0** — Settings panel for global defaults, locale
 
 ## License
 

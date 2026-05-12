@@ -126,6 +126,27 @@ describe('normalizeItem', () => {
     expect(item.type).toBe('point');
     expect(item.group).toBe('politics');
   });
+
+  it('does not auto-generate title for background items with BCE start', () => {
+    const item = normalizeItem({ start: '-490', type: 'background' }, 0);
+    expect(item.type).toBe('background');
+    expect(item.title).toBeUndefined();
+  });
+
+  it('does not auto-generate title for background items with CE start', () => {
+    const item = normalizeItem({ start: '1000', end: '1200', type: 'background' }, 0);
+    expect(item.title).toBeUndefined();
+  });
+
+  it('allows background items with no content', () => {
+    const item = normalizeItem({ start: '1000', end: '1200', type: 'background' }, 0);
+    expect(item.content).toBe('');
+  });
+
+  it('allows background items with a group', () => {
+    const item = normalizeItem({ start: '1000', end: '1200', type: 'background', group: 'military' }, 0);
+    expect(item.group).toBe('military');
+  });
 });
 
 describe('resolveGroups (auto-infer)', () => {
