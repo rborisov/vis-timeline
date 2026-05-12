@@ -107,3 +107,18 @@
 .theme-dark .timeline-plugin .vis-item {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
+
+/* Image thumbnails inside event items */
+.timeline-plugin .tl-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.timeline-plugin .tl-thumb {
+  height: 24px;
+  width: 24px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
