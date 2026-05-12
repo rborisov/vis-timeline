@@ -70,7 +70,7 @@ export class BasesTimelineView extends BasesView {
 
       // Background items must not carry a label — the auto-set basename would
       // render as text inside the era band and visually overlap real events
-      if (raw.type === 'background') raw.content = '';
+      if (raw.type === 'background') { raw.content = ''; raw.image = undefined; }
 
       try {
         const item = normalizeItem(raw, normalized.length);
