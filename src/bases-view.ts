@@ -3,6 +3,7 @@ import type { BasesPropertyId, ViewOption } from 'obsidian';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import type { NormalizedTimelineItem } from './types';
+import { resolveImageSrc, buildImageContent } from './image';
 
 const DEFAULT_START_PROP = 'note.start' as BasesPropertyId;
 const DEFAULT_END_PROP = 'note.end' as BasesPropertyId;
@@ -32,6 +33,7 @@ export class BasesTimelineView extends BasesView {
     const endProp = this.config.getAsPropertyId('endProp') ?? DEFAULT_END_PROP;
     const contentProp = this.config.getAsPropertyId('contentProp');
     const groupProp = this.config.getAsPropertyId('groupProp') ?? DEFAULT_GROUP_PROP;
+    const imageProp = this.config.getAsPropertyId('imageProp') ?? ('note.image' as BasesPropertyId);
 
     const normalized: NormalizedTimelineItem[] = [];
 
@@ -57,6 +59,9 @@ export class BasesTimelineView extends BasesView {
       const vGroup = entry.getValue(groupProp);
       if (vGroup && !(vGroup instanceof NullValue)) raw.group = vGroup.toString();
 
+      const vImage = entry.getValue(imageProp);
+      if (vImage && !(vImage instanceof NullValue)) raw.image = vImage.toString();
+
       // Read display fields by their standard vis-timeline names — no config needed
       for (const field of ['type', 'className', 'title'] as const) {
         const v = entry.getValue(`note.${field}` as BasesPropertyId);
@@ -69,6 +74,10 @@ export class BasesTimelineView extends BasesView {
 
       try {
         const item = normalizeItem(raw, normalized.length);
+        if (item.image) {
+          const src = resolveImageSrc(item.image, this.app);
+          if (src) item.content = buildImageContent(item.content, src);
+        }
         this.fileMap.set(entry.file.path, entry.file);
         normalized.push(item);
       } catch {
@@ -124,6 +133,12 @@ export function getBasesTimelineOptions(): ViewOption[] {
       key: 'groupProp',
       displayName: 'Group',
       placeholder: 'none (optional)',
+    },
+    {
+      type: 'property',
+      key: 'imageProp',
+      displayName: 'Image',
+      placeholder: 'image (optional)',
     },
   ];
 }
