@@ -56,7 +56,7 @@
 | `rolling-stones-formed.md` | 1962-07 | — | — |
 | `british-invasion.md` | 1964 | 1967 | landmark |
 | `apple-records.md` | 1968-01 | — | — |
-| `woodstock.md` | 1969-08-15 | 1969-08-18 | landmark |
+| `woodstock.md` | 1969-08-15 | — | landmark |
 
 ## Quick start
 
