@@ -4,7 +4,7 @@ export function buildImageContent(label: string, src: string): string {
   return `<span class="tl-item"><img class="tl-thumb" src="${src}"><span class="tl-label">${label}</span></span>`;
 }
 
-// Matches ![[path]] or [[path]], with optional |alias
+// Matches ![[path]], [[path]], and ![[path|alias]] (alias is stripped)
 const WIKILINK_RE = /^!?\[\[(.+?)(?:\|[^\]]+)?\]\]$/;
 
 export function resolveImageSrc(raw: string, app: App): string {
@@ -13,6 +13,7 @@ export function resolveImageSrc(raw: string, app: App): string {
   const wikiMatch = WIKILINK_RE.exec(trimmed);
   if (wikiMatch) {
     const linkpath = wikiMatch[1]!;
+    // sourcePath '' means resolve from vault root; Obsidian can't prefer co-located files without it
     const file = app.metadataCache.getFirstLinkpathDest(linkpath, '');
     if (!file) return '';
     return app.vault.getResourcePath(file);

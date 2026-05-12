@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { buildImageContent } from './image';
+import { buildImageContent, resolveImageSrc } from './image';
 import type { App, TFile } from 'obsidian';
-import { resolveImageSrc } from './image';
 
 describe('buildImageContent', () => {
   it('wraps label and src in thumbnail layout HTML', () => {
@@ -28,6 +27,10 @@ describe('resolveImageSrc', () => {
 
   it('returns empty string for non-http non-wikilink strings (XSS guard)', () => {
     expect(resolveImageSrc('javascript:alert(1)', {} as App)).toBe('');
+  });
+
+  it('returns empty string for data: URIs (XSS guard)', () => {
+    expect(resolveImageSrc('data:image/png;base64,abc', {} as App)).toBe('');
   });
 
   it('resolves ![[file.jpg]] wikilink via app', () => {
@@ -61,9 +64,10 @@ describe('resolveImageSrc', () => {
       vault: { getResourcePath: vi.fn().mockReturnValue('app://vault/img/cover.jpg') },
     } as unknown as App;
 
-    resolveImageSrc('![[cover.jpg|thumbnail]]', app);
+    const result = resolveImageSrc('![[cover.jpg|thumbnail]]', app);
 
     expect(app.metadataCache.getFirstLinkpathDest).toHaveBeenCalledWith('cover.jpg', '');
+    expect(result).toBe('app://vault/img/cover.jpg');
   });
 
   it('returns empty string when wikilink file is not found in vault', () => {
