@@ -63,6 +63,10 @@ export class BasesTimelineView extends BasesView {
         if (v && !(v instanceof NullValue)) raw[field] = v.toString();
       }
 
+      // Background items must not carry a label — the auto-set basename would
+      // render as text inside the era band and visually overlap real events
+      if (raw.type === 'background') raw.content = '';
+
       try {
         const item = normalizeItem(raw, normalized.length);
         this.fileMap.set(entry.file.path, entry.file);

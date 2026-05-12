@@ -85,6 +85,11 @@
   border-radius: 0;
   padding: 0;
   box-shadow: none;
+  pointer-events: none;
+}
+
+.timeline-plugin .vis-item.vis-background .vis-item-content {
+  display: none;
 }
 
 /* Selected */
