@@ -4,6 +4,7 @@ import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';
 import { BasesTimelineView, getBasesTimelineOptions } from './bases-view';
+import { resolveImageSrc, buildImageContent } from './image';
 
 export default class VisTimelinePlugin extends Plugin {
   settings!: TimelineBlockSettings;
@@ -22,6 +23,12 @@ export default class VisTimelinePlugin extends Plugin {
       try {
         const { items: rawItems, groups: rawGroups, options } = parseBlock(source);
         const items = rawItems.map((item, i) => normalizeItem(item, i));
+        for (const item of items) {
+          if (item.image) {
+            const src = resolveImageSrc(item.image, this.app);
+            if (src) item.content = buildImageContent(item.content, src);
+          }
+        }
         const groups = resolveGroups(items, rawGroups);
         const tl = renderTimeline(el, items, options, groups);
         this.register(() => tl.destroy());
