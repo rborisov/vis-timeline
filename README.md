@@ -153,13 +153,22 @@ Configure which note properties to use via the view options panel:
 | Label | file name | Displayed on the item. |
 | Group | — | Optional. Groups items into rows. |
 
-If Bases is not enabled in the vault, the view type registration is silently skipped.
+Clicking a timeline item opens the corresponding note. If Bases is not enabled in the vault, the view type registration is silently skipped.
 
 A ready-to-use example set of notes and a `.base` file is in [`docs/examples/medieval-europe-bases/`](docs/examples/medieval-europe-bases/).
 
+## Changelog
+
+| Version | What shipped |
+| --- | --- |
+| **0.1.0** | Initial release — `vis-timeline` code block, YAML/JSON input, BCE/CE dates |
+| **0.2.0** | Groups and subgroups, `nestedGroups`, auto-inferred groups |
+| **0.3.0** | Background items (`type: background`), Obsidian Bases timeline view |
+| **0.3.1** | Click item in Bases view to open the note |
+
 ## Roadmap
 
-- **v0.3.0** — Settings panel for global defaults, locale
+- **v0.4.0** — Settings panel for global defaults, locale/date formatting, community plugin submission
 
 ## License
 
