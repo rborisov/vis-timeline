@@ -140,6 +140,21 @@ CE dates are passed directly to vis-timeline. BCE dates are converted internally
 | `zoomMin`     | number  | 10 yrs  | Min zoom window (ms)       |
 | `zoomMax`     | number  | 10k yrs | Max zoom window (ms)       |
 
+## Obsidian Bases
+
+The plugin registers a **Timeline** view type for [Obsidian Bases](https://obsidian.md/help/bases) (Obsidian 1.10+). Add a `start` property to your notes, create a `.base` file, and switch to the Timeline view to see all matching notes rendered as an interactive timeline.
+
+Configure which note properties to use via the view options panel:
+
+| Option | Default | Notes |
+| --- | --- | --- |
+| Start date | `start` | Required. Any supported date format. |
+| End date | — | Optional. Makes the item a range. |
+| Label | file name | Displayed on the item. |
+| Group | — | Optional. Groups items into rows. |
+
+If Bases is not enabled in the vault, the view type registration is silently skipped.
+
 ## Roadmap
 
 - **v0.3.0** — Settings panel for global defaults, locale

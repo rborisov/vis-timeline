@@ -3,12 +3,20 @@ import { parseBlock } from './parser';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';
+import { BasesTimelineView, getBasesTimelineOptions } from './bases-view';
 
 export default class VisTimelinePlugin extends Plugin {
   settings!: TimelineBlockSettings;
 
   async onload() {
     await this.loadSettings();
+
+    this.registerBasesView('vis-timeline', {
+      name: 'Timeline',
+      icon: 'lucide-calendar-range',
+      factory: (controller, containerEl) => new BasesTimelineView(controller, containerEl),
+      options: getBasesTimelineOptions,
+    });
 
     this.registerMarkdownCodeBlockProcessor('vis-timeline', (source, el) => {
       try {
