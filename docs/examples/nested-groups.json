@@ -1,0 +1,16 @@
+{
+  "groups": [
+    { "id": "europe", "content": "Europe", "nestedGroups": ["england", "france"] },
+    { "id": "england", "content": "England" },
+    { "id": "france", "content": "France" },
+    { "id": "asia", "content": "Asia", "nestedGroups": ["mongolia", "china"] },
+    { "id": "mongolia", "content": "Mongolia" },
+    { "id": "china", "content": "China" }
+  ],
+  "items": [
+    { "content": "Magna Carta", "start": "1215", "group": "england" },
+    { "content": "Hundred Years' War", "start": "1337", "end": "1453", "group": "france" },
+    { "content": "Mongol Empire", "start": "1206", "end": "1368", "group": "mongolia" },
+    { "content": "Ming Dynasty", "start": "1368", "end": "1644", "group": "china" }
+  ]
+}
