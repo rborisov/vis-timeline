@@ -111,6 +111,7 @@ export function normalizeItem(raw: unknown, index: number): NormalizedTimelineIt
   if (item.className) normalized.className = String(item.className);
   if (item.type) normalized.type = String(item.type);
   if (item.group !== undefined) normalized.group = item.group as string | number;
+  if (item.image) normalized.image = String(item.image);
 
   return normalized;
 }

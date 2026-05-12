@@ -147,6 +147,16 @@ describe('normalizeItem', () => {
     const item = normalizeItem({ start: '1000', end: '1200', type: 'background', group: 'military' }, 0);
     expect(item.group).toBe('military');
   });
+
+  it('passes through image field when provided', () => {
+    const item = normalizeItem({ content: 'Test', start: '1973', image: '![[cover.jpg]]' }, 0);
+    expect(item.image).toBe('![[cover.jpg]]');
+  });
+
+  it('omits image when not provided', () => {
+    const item = normalizeItem({ content: 'Test', start: '1973' }, 0);
+    expect(item.image).toBeUndefined();
+  });
 });
 
 describe('resolveGroups (auto-infer)', () => {
