@@ -1,0 +1,54 @@
+.timeline-plugin.timeline-theme-modern {
+  --bg: #111827;
+  --card: #1f2937;
+  --line: #374151;
+  --accent: #8b5cf6;
+  --text: #e5e7eb;
+  color: var(--text);
+}
+
+.timeline-plugin.timeline-theme-modern .timeline-list {
+  position: relative;
+  padding-left: 32px;
+}
+
+.timeline-plugin.timeline-theme-modern .timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--line));
+}
+
+.timeline-plugin.timeline-theme-modern .timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.timeline-plugin.timeline-theme-modern .timeline-marker {
+  position: absolute;
+  left: -4px;
+  top: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18);
+}
+
+.timeline-plugin.timeline-theme-modern .timeline-content {
+  background: color-mix(in srgb, var(--card) 92%, black);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.timeline-plugin.timeline-theme-modern .timeline-content:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}

@@ -1,0 +1,36 @@
+.timeline-plugin.timeline-theme-compact .timeline-list {
+  padding-left: 20px;
+}
+
+.timeline-plugin.timeline-theme-compact .timeline-item {
+  position: relative;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.timeline-plugin.timeline-theme-compact .timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--text-faint);
+}
+
+.timeline-plugin.timeline-theme-compact .timeline-marker {
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+}
+
+.timeline-plugin.timeline-theme-compact .timeline-content {
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}

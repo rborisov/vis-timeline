@@ -1,0 +1,42 @@
+.timeline-plugin.timeline-horizontal .timeline-list {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 24px 0 0 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+.timeline-plugin.timeline-horizontal .timeline-list::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--text-faint);
+}
+
+.timeline-plugin.timeline-horizontal .timeline-item {
+  position: relative;
+  min-width: 220px;
+  padding-top: 24px;
+}
+
+.timeline-plugin.timeline-horizontal .timeline-marker {
+  position: absolute;
+  top: 6px;
+  left: 18px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+  border: 3px solid var(--background-primary);
+}
+
+.timeline-plugin.timeline-horizontal .timeline-content {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  padding: 12px;
+}

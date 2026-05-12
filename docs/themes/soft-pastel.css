@@ -1,0 +1,45 @@
+.timeline-plugin.timeline-theme-pastel {
+  --accent: #7c3aed;
+  --line: #c4b5fd;
+  --card: #faf5ff;
+  --text: #3b0764;
+  color: var(--text);
+}
+
+.timeline-plugin.timeline-theme-pastel .timeline-list {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-plugin.timeline-theme-pastel .timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #c4b5fd, #e9d5ff);
+}
+
+.timeline-plugin.timeline-theme-pastel .timeline-item {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.timeline-plugin.timeline-theme-pastel .timeline-marker {
+  position: absolute;
+  left: -1px;
+  top: 9px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 4px solid white;
+}
+
+.timeline-plugin.timeline-theme-pastel .timeline-content {
+  background: var(--card);
+  border: 1px solid #e9d5ff;
+  border-radius: 16px;
+  padding: 12px 14px;
+}

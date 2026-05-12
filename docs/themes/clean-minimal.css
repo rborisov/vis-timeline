@@ -1,0 +1,61 @@
+.timeline-plugin {
+  --timeline-line: var(--text-muted);
+  --timeline-accent: var(--interactive-accent);
+  --timeline-bg: var(--background-primary);
+  --timeline-card: var(--background-secondary);
+  --timeline-text: var(--text-normal);
+  color: var(--timeline-text);
+}
+
+.timeline-plugin .timeline-list {
+  position: relative;
+  margin: 0;
+  padding-left: 28px;
+}
+
+.timeline-plugin .timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--timeline-line);
+  opacity: 0.5;
+}
+
+.timeline-plugin .timeline-item {
+  position: relative;
+  margin: 0 0 18px 0;
+  padding: 0 0 0 18px;
+}
+
+.timeline-plugin .timeline-marker {
+  position: absolute;
+  left: -2px;
+  top: 8px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--timeline-accent);
+  border: 3px solid var(--timeline-bg);
+  box-shadow: 0 0 0 2px var(--timeline-accent);
+}
+
+.timeline-plugin .timeline-content {
+  background: var(--timeline-card);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.timeline-plugin .timeline-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.timeline-plugin .timeline-date {
+  font-size: 0.85em;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
