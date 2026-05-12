@@ -1,3 +1,42 @@
+# Groups
+
+## YAML
+
+```vis-timeline
+groups:
+  - id: military
+    content: Military
+  - id: political
+    content: Political
+  - id: cultural
+    content: Cultural
+
+items:
+  - content: Battle of Hastings
+    start: "1066-10-14"
+    group: military
+
+  - content: Norman Conquest
+    start: "1066"
+    end: "1072"
+    group: political
+
+  - content: Domesday Book
+    start: "1086"
+    group: political
+
+  - content: Canterbury Tales written
+    start: "1387"
+    group: cultural
+
+  - content: Battle of Agincourt
+    start: "1415-10-25"
+    group: military
+```
+
+## JSON
+
+```vis-timeline
 {
   "groups": [
     { "id": "military", "content": "Military" },
@@ -12,3 +51,4 @@
     { "content": "Battle of Agincourt", "start": "1415-10-25", "group": "military" }
   ]
 }
+```
