@@ -1,0 +1,11 @@
+filters:
+  and:
+    - "file.folder == this.file.folder"
+    - "file.ext == \"md\""
+    - "file.path != this.file.path"
+    - "start != null"
+views:
+  - type: table
+    name: Table
+  - type: vis-timeline
+    name: Timeline
