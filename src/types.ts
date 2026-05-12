@@ -6,6 +6,7 @@ export interface RawTimelineItem {
   title?: string;
   type?: string;
   group?: string | number;
+  image?: string;
   [key: string]: unknown;
 }
 
@@ -18,6 +19,7 @@ export interface NormalizedTimelineItem {
   title?: string;
   type?: string;
   group?: string | number;
+  image?: string;
 }
 
 export interface RawGroupItem {
