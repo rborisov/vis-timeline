@@ -9,6 +9,8 @@
   --timeline-line: var(--background-modifier-border);
   color: var(--timeline-text);
   font-family: inherit;
+  width: 100%;
+  min-height: 300px;
 }
 
 /* Outer container */

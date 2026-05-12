@@ -1,7 +1,7 @@
 {
 	"name": "vis-timeline",
 	"version": "0.3.4",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "Render interactive timelines in notes. Supports BCE/CE historical dates, YAML authoring, and row groups with nesting.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
@@ -19,7 +19,7 @@
 		"@types/js-yaml": "^4.0.9",
 		"@types/node": "^20.19.40",
 		"esbuild": "0.25.5",
-		"eslint-plugin-obsidianmd": "0.1.9",
+		"eslint-plugin-obsidianmd": "^0.3.0",
 		"globals": "14.0.0",
 		"jiti": "2.6.1",
 		"tslib": "2.4.0",

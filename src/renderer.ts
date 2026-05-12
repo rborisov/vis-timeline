@@ -20,9 +20,7 @@ export function renderTimeline(
 
   const container = el.createEl('div');
   container.className = 'timeline-plugin';
-  container.style.width = '100%';
   container.style.height = merged.height;
-  container.style.minHeight = '300px';
 
   const TimelineConstructor = Timeline as unknown as new (
     ...args: unknown[]
@@ -52,7 +50,7 @@ export function renderTimeline(
 
   // Force a redraw after the next layout pass so vis-timeline gets real
   // container dimensions. Without this, iOS renders into a zero-size box.
-  requestAnimationFrame(() => tl.redraw());
+  window.requestAnimationFrame(() => tl.redraw());
 
   return tl;
 }

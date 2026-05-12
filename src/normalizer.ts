@@ -72,12 +72,7 @@ function normalizeCeDate(value: string): string | Date {
 }
 
 function stripHtml(html: string): string {
-  if (typeof document === 'undefined') {
-    return html.replace(/<[^>]*>/g, '');
-  }
-  const temp = document.createElement('div');
-  temp.innerHTML = html;
-  return temp.textContent ?? temp.innerText ?? '';
+  return html.replace(/<[^>]*>/g, '');
 }
 
 export function normalizeItem(raw: unknown, index: number): NormalizedTimelineItem {
@@ -110,7 +105,7 @@ export function normalizeItem(raw: unknown, index: number): NormalizedTimelineIt
   if (title) normalized.title = title;
   if (item.className) normalized.className = String(item.className);
   if (item.type) normalized.type = String(item.type);
-  if (item.group !== undefined) normalized.group = item.group as string | number;
+  if (item.group !== undefined) normalized.group = item.group;
   if (item.image) normalized.image = String(item.image);
 
   return normalized;
