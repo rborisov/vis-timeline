@@ -1,6 +1,6 @@
 # Beatles Era — comprehensive Bases example
 
-20 notes covering the Beatles and the music industry from 1952 to 1970. Designed to demonstrate every frontmatter property the Timeline view supports.
+29 notes covering the Beatles, Rolling Stones, and the music industry from 1952 to 1972. Designed to demonstrate every frontmatter property the Timeline view supports, including album-art thumbnails.
 
 ## Features demonstrated
 
@@ -12,6 +12,7 @@
 | Background shading | `type: background` — era bands behind all items |
 | Custom tooltip | `title` — every note has a descriptive hover text |
 | CSS class | `className: landmark` — milestone events styled differently |
+| Image thumbnails | `image` — album art shown as a small thumb next to the label |
 
 ## Notes in this folder
 
@@ -47,6 +48,24 @@
 | `abbey-road.md` | 1969-09-26 | landmark |
 | `let-it-be.md` | 1970-05-08 | — |
 
+### Rolling Stones events (group: rolling-stones-event)
+
+| File | start | className | image |
+| --- | --- | --- | --- |
+| `rs-hyde-park.md` | 1969-07-05 | landmark | Wikipedia photo |
+| `rs-altamont.md` | 1969-12-06 | — | — |
+
+### Rolling Stones albums (group: rolling-stones-album)
+
+| File | start | className | image |
+| --- | --- | --- | --- |
+| `rs-debut-album.md` | 1964-04-16 | — | album art |
+| `rs-aftermath.md` | 1966-04-15 | — | album art |
+| `rs-beggars-banquet.md` | 1968-12-06 | — | album art |
+| `rs-let-it-bleed.md` | 1969-12-05 | landmark | album art |
+| `rs-sticky-fingers.md` | 1971-04-23 | landmark | album art |
+| `rs-exile.md` | 1972-05-12 | landmark | album art |
+
 ### Music industry (group: industry)
 
 | File | start | end | className |
@@ -70,6 +89,7 @@
    | Start date | `start` |
    | End date | `end` |
    | Group | `group` |
+   | Image | `image` |
 
    Leave **Label** blank — it defaults to the file name.
 

@@ -2,7 +2,7 @@ import type { App } from 'obsidian';
 
 export function buildImageContent(label: string, src: string): string {
   const safeSrc = src.replace(/"/g, '%22');
-  return `<span class="tl-item"><img class="tl-thumb" src="${safeSrc}"><span class="tl-label">${label}</span></span>`;
+  return `<span class="tl-item"><img class="tl-thumb" src="${safeSrc}" style="height:50px;width:50px;object-fit:cover;border-radius:3px;flex-shrink:0"><span class="tl-label">${label}</span></span>`;
 }
 
 // Matches ![[path]], [[path]], and ![[path|alias]] (alias is stripped)

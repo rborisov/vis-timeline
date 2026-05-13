@@ -34,6 +34,9 @@ export function renderTimeline(
     stack: merged.stack,
     zoomMin: merged.zoomMin,
     zoomMax: merged.zoomMax,
+    // Allow inline styles on img/span — our resolveImageSrc already
+    // restricts sources to vault wikilinks and https:// URLs.
+    xss: { disabled: true },
   };
 
   const tl = groups !== undefined

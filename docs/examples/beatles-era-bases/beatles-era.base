@@ -1,11 +1,12 @@
 filters:
   and:
-    - "file.folder == this.file.folder"
-    - "file.ext == \"md\""
-    - "file.path != this.file.path"
-    - "start != null"
+    - file.folder.contains(this.file.folder)
+    - file.ext == "md"
+    - file.path != this.file.path
+    - start != null
 views:
-  - type: table
-    name: Table
   - type: vis-timeline
     name: Timeline
+    imageProp: note.image
+  - type: table
+    name: Table

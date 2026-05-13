@@ -118,8 +118,8 @@
 }
 
 .timeline-plugin .tl-thumb {
-  height: 24px;
-  width: 24px;
+  height: 50px;
+  width: 50px;
   object-fit: cover;
   border-radius: 3px;
   flex-shrink: 0;
