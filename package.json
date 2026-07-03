@@ -1,11 +1,13 @@
 {
 	"name": "vis-timeline",
-	"version": "0.3.4",
+	"version": "0.3.5",
 	"private": true,
 	"description": "Render interactive timelines in notes. Supports BCE/CE historical dates, YAML authoring, and row groups with nesting.",
 	"main": "main.js",
 	"type": "module",
-	"workspaces": ["packages/*"],
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"dev": "npm run build -w packages/core && node esbuild.config.mjs",
 		"build": "npm run build -w packages/core && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
