@@ -28,6 +28,7 @@
 		"vitest": "^4.1.5"
 	},
 	"dependencies": {
+		"html-to-image": "^1.11.13",
 		"js-yaml": "^4.1.1",
 		"obsidian": "latest",
 		"vis-timeline": "^8.5.0"

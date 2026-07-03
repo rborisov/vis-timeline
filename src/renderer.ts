@@ -15,7 +15,11 @@ export function renderTimeline(
   options: BlockOptions = {},
   groups?: NormalizedGroup[],
   onItemClick?: (id: string | number) => void
-): { destroy(): void } {
+): {
+  destroy(): void;
+  getWindow(): { start: Date; end: Date };
+  setWindow(start: Date | number | string, end: Date | number | string): void;
+} {
   const merged = { ...DEFAULT_OPTIONS, ...options };
 
   const container = el.createEl('div');
@@ -24,7 +28,13 @@ export function renderTimeline(
 
   const TimelineConstructor = Timeline as unknown as new (
     ...args: unknown[]
-  ) => { destroy(): void; redraw(): void; on(event: string, cb: (props: { item?: string | number | null; what?: string }) => void): void };
+  ) => {
+    destroy(): void;
+    redraw(): void;
+    on(event: string, cb: (props: { item?: string | number | null; what?: string }) => void): void;
+    getWindow(): { start: Date; end: Date };
+    setWindow(start: Date | number | string, end: Date | number | string): void;
+  };
 
   const visOptions = {
     editable: false,
