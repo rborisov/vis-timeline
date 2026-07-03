@@ -137,10 +137,19 @@
 }
 
 /* Debug aid: replicates pubobs's offscreen export container exactly */
-.tl-offscreen-replica {
+.tl-offscreen-replica-hidden {
   position: absolute;
   left: -9999px;
   top: -9999px;
   width: 800px;
   visibility: hidden;
+}
+
+/* Debug aid: offscreen position alone, without visibility:hidden — isolates
+   whether hiding specifically (vs. just being off-viewport) matters */
+.tl-offscreen-replica-visible {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 800px;
 }
