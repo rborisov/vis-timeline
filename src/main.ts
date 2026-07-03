@@ -21,7 +21,7 @@ export default class VisTimelinePlugin extends Plugin {
       options: getBasesTimelineOptions,
     });
 
-    this.registerMarkdownCodeBlockProcessor('vis-timeline', (source, el, ctx) => {
+    this.registerMarkdownCodeBlockProcessor('vis-timeline', (source, el, ctx): Promise<void> | undefined => {
       try {
         const { items: rawItems, groups: rawGroups, options } = parseBlock(source);
         const items = rawItems.map((item, i) => normalizeItem(item, i));
@@ -45,8 +45,7 @@ export default class VisTimelinePlugin extends Plugin {
         }
 
         if (el.closest('[data-pubobs-render]')) {
-          void rasterize(el, tl);
-          return;
+          return rasterize(el, tl);
         }
 
         const child = new MarkdownRenderChild(el);
@@ -67,10 +66,12 @@ export default class VisTimelinePlugin extends Plugin {
           }
         };
         ctx.addChild(child);
+        return undefined;
       } catch (e) {
         el.createEl('div', {
           text: `vis-timeline error: ${e instanceof Error ? e.message : String(e)}`,
         });
+        return undefined;
       }
     });
   }
