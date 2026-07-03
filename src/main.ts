@@ -3,7 +3,6 @@ import { parseBlock } from './parser';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import { rasterize } from './rasterize';
-import { hashBlockSource, getSavedWindow, setSavedWindow } from './view-store';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';
 import { BasesTimelineView, getBasesTimelineOptions } from './bases-view';
 import { resolveImageSrc, buildImageContent } from './image';
@@ -33,31 +32,14 @@ export default class VisTimelinePlugin extends Plugin {
         }
         const groups = resolveGroups(items, rawGroups);
         const isPubobsExport = el.closest('[data-pubobs-render]') !== null;
-        const blockHash = hashBlockSource(source);
-        const saved = getSavedWindow(this.settings, ctx.sourcePath, blockHash);
-        const tl = renderTimeline(el, items, options, groups, undefined, isPubobsExport, saved);
+        const tl = renderTimeline(el, items, options, groups, undefined, isPubobsExport);
 
         if (isPubobsExport) {
           return rasterize(el, tl);
         }
 
         const child = new MarkdownRenderChild(el);
-        child.onunload = () => {
-          try {
-            const window_ = tl.getWindow();
-            setSavedWindow(this.settings, ctx.sourcePath, blockHash, {
-              start: +window_.start,
-              end: +window_.end,
-            });
-            void this.saveSettings().catch((err) => {
-              console.error('vis-timeline: failed to save timeline view', err);
-            });
-          } catch (err) {
-            console.error('vis-timeline: failed to read timeline view for saving', err);
-          } finally {
-            tl.destroy();
-          }
-        };
+        child.onunload = () => tl.destroy();
         ctx.addChild(child);
         return undefined;
       } catch (e) {
