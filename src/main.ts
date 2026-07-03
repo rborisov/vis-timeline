@@ -1,7 +1,9 @@
-import { Plugin } from 'obsidian';
+import { MarkdownRenderChild, Plugin } from 'obsidian';
 import { parseBlock } from './parser';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
+import { rasterize } from './rasterize';
+import { hashBlockSource, getSavedWindow, setSavedWindow } from './view-store';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';
 import { BasesTimelineView, getBasesTimelineOptions } from './bases-view';
 import { resolveImageSrc, buildImageContent } from './image';
@@ -19,7 +21,7 @@ export default class VisTimelinePlugin extends Plugin {
       options: getBasesTimelineOptions,
     });
 
-    this.registerMarkdownCodeBlockProcessor('vis-timeline', (source, el) => {
+    this.registerMarkdownCodeBlockProcessor('vis-timeline', (source, el, ctx) => {
       try {
         const { items: rawItems, groups: rawGroups, options } = parseBlock(source);
         const items = rawItems.map((item, i) => normalizeItem(item, i));
@@ -31,7 +33,35 @@ export default class VisTimelinePlugin extends Plugin {
         }
         const groups = resolveGroups(items, rawGroups);
         const tl = renderTimeline(el, items, options, groups);
-        this.register(() => tl.destroy());
+
+        const blockHash = hashBlockSource(source);
+        const saved = getSavedWindow(this.settings, ctx.sourcePath, blockHash);
+        if (saved) {
+          try {
+            tl.setWindow(saved.start, saved.end);
+          } catch {
+            // Malformed saved data — fall back to the default view.
+          }
+        }
+
+        if (el.closest('[data-pubobs-render]')) {
+          void rasterize(el, tl);
+          return;
+        }
+
+        const child = new MarkdownRenderChild(el);
+        child.onunload = () => {
+          const window_ = tl.getWindow();
+          setSavedWindow(this.settings, ctx.sourcePath, blockHash, {
+            start: +window_.start,
+            end: +window_.end,
+          });
+          void this.saveSettings().catch((err) => {
+            console.error('vis-timeline: failed to save timeline view', err);
+          });
+          tl.destroy();
+        };
+        ctx.addChild(child);
       } catch (e) {
         el.createEl('div', {
           text: `vis-timeline error: ${e instanceof Error ? e.message : String(e)}`,
