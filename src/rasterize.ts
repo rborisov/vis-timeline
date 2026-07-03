@@ -1,20 +1,35 @@
 import { toPng } from 'html-to-image';
 
+export interface Capture {
+  dataUrl: string;
+  width: number;
+  height: number;
+}
+
+// Waits for layout to settle, then captures el as a PNG. Shared by the
+// pubobs export path (rasterize, below) and the manual "save snapshot"
+// button (save-snapshot.ts) — both need the same wait-then-capture
+// sequence, just different things to do with the result.
+export async function capturePng(el: HTMLElement): Promise<Capture> {
+  // vis-timeline's layout (especially with autoHeight, which needs to
+  // measure content, resize, then remeasure) can take more than a single
+  // requestAnimationFrame to settle — waiting a fixed frame count was not
+  // reliable. Instead, wait for the DOM to actually stop changing, the
+  // same technique pubobs's own renderNoteToHTML uses for this exact
+  // problem (see waitForStable below).
+  await waitForStable(el);
+  await waitForImages(el);
+  const pixelRatio = window.devicePixelRatio || 1;
+  const dataUrl = await toPng(el, { pixelRatio, cacheBust: true });
+  const naturalHeight = await getImageNaturalHeight(dataUrl);
+  const width = el.clientWidth;
+  const height = Math.round(naturalHeight / pixelRatio);
+  return { dataUrl, width, height };
+}
+
 export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promise<void> {
   try {
-    // vis-timeline's layout (especially with autoHeight, which needs to
-    // measure content, resize, then remeasure) can take more than a single
-    // requestAnimationFrame to settle — waiting a fixed frame count was not
-    // reliable. Instead, wait for the DOM to actually stop changing, the
-    // same technique pubobs's own renderNoteToHTML uses for this exact
-    // problem (see waitForStable below).
-    await waitForStable(el);
-    await waitForImages(el);
-    const pixelRatio = window.devicePixelRatio || 1;
-    const dataUrl = await toPng(el, { pixelRatio, cacheBust: true });
-    const naturalHeight = await getImageNaturalHeight(dataUrl);
-    const width = el.clientWidth;
-    const height = Math.round(naturalHeight / pixelRatio);
+    const { dataUrl, width, height } = await capturePng(el);
 
     tl.destroy();
     el.empty();

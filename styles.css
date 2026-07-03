@@ -130,3 +130,8 @@
   max-width: 100%;
   height: auto;
 }
+
+/* Manual "save snapshot" test button */
+.tl-save-snapshot-btn {
+  margin-top: 6px;
+}
