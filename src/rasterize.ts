@@ -11,10 +11,10 @@ export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promi
 
     tl.destroy();
     el.empty();
-    const img = el.createEl('img', {
+    el.createEl('img', {
+      cls: 'tl-export-img',
       attr: { src: dataUrl, width, height },
     });
-    img.style.cssText = 'max-width:100%;height:auto;';
   } catch (e) {
     // Rasterization is a nicety on top of an already-working interactive
     // widget — never let a failure here break the note. Leave `tl` mounted

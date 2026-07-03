@@ -51,15 +51,20 @@ export default class VisTimelinePlugin extends Plugin {
 
         const child = new MarkdownRenderChild(el);
         child.onunload = () => {
-          const window_ = tl.getWindow();
-          setSavedWindow(this.settings, ctx.sourcePath, blockHash, {
-            start: +window_.start,
-            end: +window_.end,
-          });
-          void this.saveSettings().catch((err) => {
-            console.error('vis-timeline: failed to save timeline view', err);
-          });
-          tl.destroy();
+          try {
+            const window_ = tl.getWindow();
+            setSavedWindow(this.settings, ctx.sourcePath, blockHash, {
+              start: +window_.start,
+              end: +window_.end,
+            });
+            void this.saveSettings().catch((err) => {
+              console.error('vis-timeline: failed to save timeline view', err);
+            });
+          } catch (err) {
+            console.error('vis-timeline: failed to read timeline view for saving', err);
+          } finally {
+            tl.destroy();
+          }
         };
         ctx.addChild(child);
       } catch (e) {

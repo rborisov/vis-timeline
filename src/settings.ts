@@ -3,7 +3,6 @@ export interface SavedTimelineWindow {
   end: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface TimelineBlockSettings {
   savedViews?: Record<string, Record<string, SavedTimelineWindow>>;
 }
