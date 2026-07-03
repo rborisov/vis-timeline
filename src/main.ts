@@ -37,6 +37,17 @@ export default class VisTimelinePlugin extends Plugin {
 
         const blockHash = hashBlockSource(source);
         const saved = getSavedWindow(this.settings, ctx.sourcePath, blockHash);
+        // TEMPORARY diagnostic log — remove once the saved-view lookup
+        // mismatch between interactive and pubobs-export contexts is found.
+        // eslint-disable-next-line obsidianmd/rule-custom-message
+        console.log('vis-timeline: view lookup', {
+          isPubobsExport,
+          sourcePath: ctx.sourcePath,
+          blockHash,
+          savedFound: !!saved,
+          saved,
+          savedViewsForPath: this.settings.savedViews?.[ctx.sourcePath],
+        });
         if (saved) {
           try {
             tl.setWindow(saved.start, saved.end);
