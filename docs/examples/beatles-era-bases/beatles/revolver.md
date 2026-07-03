@@ -4,6 +4,7 @@ group: beatles-album
 className: landmark
 title: Widely ranked the greatest album ever made
 image: https://upload.wikimedia.org/wikipedia/en/e/ec/Revolver_%28album_cover%29.jpg
+content: Revolver
 ---
 
 # Revolver

@@ -65,7 +65,7 @@ export class BasesTimelineView extends BasesView {
       }
 
       // Read display fields by their standard vis-timeline names — no config needed
-      for (const field of ['type', 'className', 'title'] as const) {
+      for (const field of ['type', 'className', 'title', 'content'] as const) {
         const v = entry.getValue(`note.${field}` as BasesPropertyId);
         if (v && !(v instanceof NullValue)) raw[field] = v.toString();
       }

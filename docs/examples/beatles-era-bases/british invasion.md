@@ -3,6 +3,7 @@ start: "1964"
 end: "1967"
 group: industry
 className: landmark
+content: British Invasion
 title: British acts dominate US charts — the Beatles lead the way
 ---
 
