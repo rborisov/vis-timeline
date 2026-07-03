@@ -161,3 +161,9 @@
   transition: none !important;
   animation: none !important;
 }
+
+/* Export path only — wider than pubobs's fixed 800px offscreen container so
+   item labels have room; the exported <img> scales back down responsively */
+.tl-export-width {
+  width: 1600px;
+}

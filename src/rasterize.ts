@@ -42,7 +42,14 @@ export async function capturePng(el: HTMLElement): Promise<Capture> {
 
 export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promise<void> {
   try {
-    const { dataUrl, width, height } = await capturePng(el);
+    // Capture the timeline's own container, not `el` itself. renderTimeline()
+    // widens the container beyond el's ambient (pubobs-constrained) width for
+    // the export path — capturing el would clip that overflow instead of
+    // actually rendering it wider.
+    const container = el.querySelector<HTMLElement>('.timeline-plugin');
+    if (!container) throw new Error('timeline container not found');
+
+    const { dataUrl, width, height } = await capturePng(container);
 
     tl.destroy();
     el.empty();

@@ -27,6 +27,15 @@ export function renderTimeline(
   // grow the container to fit everything instead.
   if (!autoHeight) {
     container.style.height = merged.height;
+  } else {
+    // The export path is otherwise constrained to the width of whatever
+    // ambient container it's rendered into (pubobs's fixed 800px offscreen
+    // container) — cramming a wide date range into that narrow a width
+    // makes some item labels too wide for their bars, so they get clipped
+    // by overflow:hidden. Rendering wider first and letting the exported
+    // <img> scale down responsively (it already does, via max-width:100%)
+    // gives labels room without changing how the final image displays.
+    container.addClass('tl-export-width');
   }
 
   const TimelineConstructor = Timeline as unknown as new (
