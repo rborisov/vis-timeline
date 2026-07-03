@@ -32,7 +32,8 @@ export default class VisTimelinePlugin extends Plugin {
           }
         }
         const groups = resolveGroups(items, rawGroups);
-        const tl = renderTimeline(el, items, options, groups);
+        const isPubobsExport = el.closest('[data-pubobs-render]') !== null;
+        const tl = renderTimeline(el, items, options, groups, undefined, isPubobsExport);
 
         const blockHash = hashBlockSource(source);
         const saved = getSavedWindow(this.settings, ctx.sourcePath, blockHash);
@@ -44,7 +45,7 @@ export default class VisTimelinePlugin extends Plugin {
           }
         }
 
-        if (el.closest('[data-pubobs-render]')) {
+        if (isPubobsExport) {
           return rasterize(el, tl);
         }
 

@@ -14,7 +14,8 @@ export function renderTimeline(
   items: NormalizedTimelineItem[],
   options: BlockOptions = {},
   groups?: NormalizedGroup[],
-  onItemClick?: (id: string | number) => void
+  onItemClick?: (id: string | number) => void,
+  autoHeight = false
 ): {
   destroy(): void;
   getWindow(): { start: Date; end: Date };
@@ -24,7 +25,13 @@ export function renderTimeline(
 
   const container = el.createEl('div');
   container.className = 'timeline-plugin';
-  container.style.height = merged.height;
+  // A fixed/viewport-relative height only makes sense when the widget is
+  // interactive and scrollable. A rasterized PNG has no scrolling, so a
+  // fixed height would silently clip content — autoHeight lets vis-timeline
+  // grow the container to fit everything instead.
+  if (!autoHeight) {
+    container.style.height = merged.height;
+  }
 
   const TimelineConstructor = Timeline as unknown as new (
     ...args: unknown[]
@@ -38,7 +45,7 @@ export function renderTimeline(
 
   const visOptions = {
     editable: false,
-    height: '100%',
+    height: autoHeight ? undefined : '100%',
     margin: { item: { horizontal: 10, vertical: 4 }, axis: 5 },
     orientation: merged.orientation,
     stack: merged.stack,
