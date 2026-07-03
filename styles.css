@@ -135,3 +135,12 @@
 .tl-save-snapshot-btn {
   margin-top: 6px;
 }
+
+/* Debug aid: replicates pubobs's offscreen export container exactly */
+.tl-offscreen-replica {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 800px;
+  visibility: hidden;
+}

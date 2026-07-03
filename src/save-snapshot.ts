@@ -22,17 +22,23 @@ async function saveSnapshot(el: HTMLElement, app: App, sourcePath: string, butto
     // contains this button, which would otherwise show up in the image.
     const container = el.querySelector<HTMLElement>('.timeline-plugin');
     if (!container) throw new Error('timeline container not found');
-
-    const { dataUrl } = await capturePng(container);
-    const path = await getUniqueImagePath(app, sourcePath);
-    await app.vault.createBinary(path, dataUrlToArrayBuffer(dataUrl));
-    new Notice(`Saved timeline snapshot to ${path}`);
+    await captureAndSave(container, app, sourcePath);
   } catch (e) {
     console.error('vis-timeline: failed to save snapshot', e);
     new Notice('Failed to save timeline snapshot — see console for details');
   } finally {
     button.disabled = false;
   }
+}
+
+// Shared by the normal save-snapshot button and debug-preview.ts's
+// offscreen-container test — captures container and writes it to the
+// vault, without any button-related DOM bookkeeping.
+export async function captureAndSave(container: HTMLElement, app: App, sourcePath: string): Promise<void> {
+  const { dataUrl } = await capturePng(container);
+  const path = await getUniqueImagePath(app, sourcePath);
+  await app.vault.createBinary(path, dataUrlToArrayBuffer(dataUrl));
+  new Notice(`Saved timeline snapshot to ${path}`);
 }
 
 function dataUrlToArrayBuffer(dataUrl: string): ArrayBuffer {
