@@ -1,4 +1,6 @@
+import type { App } from 'obsidian';
 import { toPng } from 'html-to-image';
+import { saveExportAsset } from './export-asset';
 
 export interface Capture {
   dataUrl: string;
@@ -40,7 +42,13 @@ export async function capturePng(el: HTMLElement): Promise<Capture> {
   }
 }
 
-export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promise<void> {
+export async function rasterize(
+  el: HTMLElement,
+  tl: { destroy(): void },
+  app: App,
+  sourcePath: string,
+  blockSource: string
+): Promise<void> {
   try {
     // Capture the timeline's own container, not `el` itself. renderTimeline()
     // widens the container beyond el's ambient (pubobs-constrained) width for
@@ -50,12 +58,16 @@ export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promi
     if (!container) throw new Error('timeline container not found');
 
     const { dataUrl, width, height } = await capturePng(container);
+    // Written as a real vault file (not embedded inline) so pubobs uploads
+    // it as a normal asset instead of bloating its sync request body — see
+    // export-asset.ts.
+    const resourcePath = await saveExportAsset(app, sourcePath, blockSource, dataUrl);
 
     tl.destroy();
     el.empty();
     el.createEl('img', {
       cls: 'tl-export-img',
-      attr: { src: dataUrl, width, height },
+      attr: { src: resourcePath, width, height },
     });
   } catch (e) {
     // Rasterization is a nicety on top of an already-working interactive

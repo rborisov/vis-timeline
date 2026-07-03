@@ -37,7 +37,7 @@ export default class VisTimelinePlugin extends Plugin {
         const tl = renderTimeline(el, items, options, groups, undefined, isPubobsExport);
 
         if (isPubobsExport) {
-          return rasterize(el, tl);
+          return rasterize(el, tl, this.app, ctx.sourcePath, source);
         }
 
         addSaveSnapshotButton(el, this.app, ctx.sourcePath);

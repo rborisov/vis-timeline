@@ -1,5 +1,6 @@
 import { Notice, type App } from 'obsidian';
 import { capturePng } from './rasterize';
+import { dataUrlToArrayBuffer } from './data-url';
 
 // Manual test aid: lets you capture the interactive widget exactly as
 // html-to-image would for pubobs, without pubobs's offscreen container or
@@ -39,14 +40,6 @@ export async function captureAndSave(container: HTMLElement, app: App, sourcePat
   const path = await getUniqueImagePath(app, sourcePath);
   await app.vault.createBinary(path, dataUrlToArrayBuffer(dataUrl));
   new Notice(`Saved timeline snapshot to ${path}`);
-}
-
-function dataUrlToArrayBuffer(dataUrl: string): ArrayBuffer {
-  const base64 = dataUrl.slice(dataUrl.indexOf(',') + 1);
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes.buffer;
 }
 
 async function getUniqueImagePath(app: App, sourcePath: string): Promise<string> {
