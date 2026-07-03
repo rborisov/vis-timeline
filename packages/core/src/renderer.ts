@@ -1,4 +1,4 @@
-import type { NormalizedTimelineItem, NormalizedGroup, BlockOptions } from 'vis-timeline-core';
+import type { NormalizedTimelineItem, NormalizedGroup, BlockOptions } from './types.js';
 import { Timeline } from 'vis-timeline/standalone';
 
 const DEFAULT_OPTIONS: Required<BlockOptions> = {
@@ -18,7 +18,8 @@ export function renderTimeline(
 ): { destroy(): void } {
   const merged = { ...DEFAULT_OPTIONS, ...options };
 
-  const container = el.createEl('div');
+  const container = document.createElement('div');
+  el.appendChild(container);
   container.className = 'timeline-plugin';
   container.style.height = merged.height;
 

@@ -8,3 +8,4 @@ export type {
 } from './types.js';
 export { parseBlock } from './parser.js';
 export { normalizeItem, resolveGroups } from './normalizer.js';
+export { renderTimeline } from './renderer.js';

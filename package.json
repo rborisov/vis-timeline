@@ -31,7 +31,6 @@
 	},
 	"dependencies": {
 		"obsidian": "latest",
-		"vis-timeline": "^8.5.0",
 		"vis-timeline-core": "^0.1.0"
 	}
 }
