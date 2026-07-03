@@ -1,7 +1,6 @@
 import { BasesView, NullValue, QueryController, TFile } from 'obsidian';
 import type { BasesAllOptions, BasesPropertyId, BasesViewConfig } from 'obsidian';
-import type { NormalizedTimelineItem } from 'vis-timeline-core';
-import { normalizeItem, resolveGroups, renderTimeline } from 'vis-timeline-core';
+import { normalizeItem, resolveGroups, renderTimeline, type NormalizedTimelineItem } from 'vis-timeline-core';
 import { resolveImageSrc, buildImageContent } from './image';
 
 const DEFAULT_START_PROP = 'note.start' as BasesPropertyId;
