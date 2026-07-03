@@ -3,8 +3,6 @@ import { parseBlock } from './parser';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import { rasterize } from './rasterize';
-import { addSaveSnapshotButton } from './save-snapshot';
-import { addAutoHeightPreviewButton } from './debug-preview';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';
 import { BasesTimelineView, getBasesTimelineOptions } from './bases-view';
 import { resolveImageSrc, buildImageContent } from './image';
@@ -39,9 +37,6 @@ export default class VisTimelinePlugin extends Plugin {
         if (isPubobsExport) {
           return rasterize(el, tl, this.app, ctx.sourcePath, source);
         }
-
-        addSaveSnapshotButton(el, this.app, ctx.sourcePath);
-        addAutoHeightPreviewButton(el, items, options, groups, this.app, ctx.sourcePath);
 
         const child = new MarkdownRenderChild(el);
         child.onunload = () => tl.destroy();

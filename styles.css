@@ -131,29 +131,6 @@
   height: auto;
 }
 
-/* Manual "save snapshot" test button */
-.tl-save-snapshot-btn {
-  margin-top: 6px;
-}
-
-/* Debug aid: replicates pubobs's offscreen export container exactly */
-.tl-offscreen-replica-hidden {
-  position: absolute;
-  left: -9999px;
-  top: -9999px;
-  width: 800px;
-  visibility: hidden;
-}
-
-/* Debug aid: offscreen position alone, without visibility:hidden — isolates
-   whether hiding specifically (vs. just being off-viewport) matters */
-.tl-offscreen-replica-visible {
-  position: absolute;
-  left: -9999px;
-  top: -9999px;
-  width: 800px;
-}
-
 /* Forces every style change to apply instantly during PNG capture instead
    of visually interpolating — see capturePng() in rasterize.ts */
 .tl-capture-no-transitions,
