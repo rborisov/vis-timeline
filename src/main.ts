@@ -33,28 +33,9 @@ export default class VisTimelinePlugin extends Plugin {
         }
         const groups = resolveGroups(items, rawGroups);
         const isPubobsExport = el.closest('[data-pubobs-render]') !== null;
-        const tl = renderTimeline(el, items, options, groups, undefined, isPubobsExport);
-
         const blockHash = hashBlockSource(source);
         const saved = getSavedWindow(this.settings, ctx.sourcePath, blockHash);
-        // TEMPORARY diagnostic log — remove once the saved-view lookup
-        // mismatch between interactive and pubobs-export contexts is found.
-        // eslint-disable-next-line obsidianmd/rule-custom-message
-        console.log('vis-timeline: view lookup', {
-          isPubobsExport,
-          sourcePath: ctx.sourcePath,
-          blockHash,
-          savedFound: !!saved,
-          saved,
-          savedViewsForPath: this.settings.savedViews?.[ctx.sourcePath],
-        });
-        if (saved) {
-          try {
-            tl.setWindow(saved.start, saved.end);
-          } catch {
-            // Malformed saved data — fall back to the default view.
-          }
-        }
+        const tl = renderTimeline(el, items, options, groups, undefined, isPubobsExport, saved);
 
         if (isPubobsExport) {
           return rasterize(el, tl);

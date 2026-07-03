@@ -15,7 +15,8 @@ export function renderTimeline(
   options: BlockOptions = {},
   groups?: NormalizedGroup[],
   onItemClick?: (id: string | number) => void,
-  autoHeight = false
+  autoHeight = false,
+  initialWindow?: { start: number; end: number }
 ): {
   destroy(): void;
   getWindow(): { start: Date; end: Date };
@@ -66,6 +67,19 @@ export function renderTimeline(
         onItemClick(props.item);
       }
     });
+  }
+
+  // Apply a restored window before the redraw below, so the deferred
+  // layout pass vis-timeline is about to do reflects the correct window
+  // — rather than restoring it afterward, which would need a second,
+  // separately-timed redraw that a single requestAnimationFrame wait
+  // isn't guaranteed to cover.
+  if (initialWindow) {
+    try {
+      tl.setWindow(initialWindow.start, initialWindow.end);
+    } catch {
+      // Malformed saved data — fall back to the default view.
+    }
   }
 
   // Force a redraw after the next layout pass so vis-timeline gets real
