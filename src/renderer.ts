@@ -44,6 +44,13 @@ export function renderTimeline(
     // Allow inline styles on img/span — our resolveImageSrc already
     // restricts sources to vault wikilinks and https:// URLs.
     xss: { disabled: true },
+    // vis-timeline animates its own initial fit-to-content view by default
+    // (a JS-driven transition, not CSS — disabling CSS transitions doesn't
+    // touch it). That's fine for interactive use, but the export path
+    // captures shortly after construction and would otherwise capture
+    // mid-animation. Only disable it for the export path so interactive
+    // users keep their normal smooth pan/zoom behavior.
+    animation: !autoHeight,
   };
 
   const tl = groups !== undefined
