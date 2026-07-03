@@ -11,20 +11,33 @@ export interface Capture {
 // button (save-snapshot.ts) — both need the same wait-then-capture
 // sequence, just different things to do with the result.
 export async function capturePng(el: HTMLElement): Promise<Capture> {
-  // vis-timeline's layout (especially with autoHeight, which needs to
-  // measure content, resize, then remeasure) can take more than a single
-  // requestAnimationFrame to settle — waiting a fixed frame count was not
-  // reliable. Instead, wait for the DOM to actually stop changing, the
-  // same technique pubobs's own renderNoteToHTML uses for this exact
-  // problem (see waitForStable below).
-  await waitForStable(el);
-  await waitForImages(el);
-  const pixelRatio = window.devicePixelRatio || 1;
-  const dataUrl = await toPng(el, { pixelRatio, cacheBust: true });
-  const naturalHeight = await getImageNaturalHeight(dataUrl);
-  const width = el.clientWidth;
-  const height = Math.round(naturalHeight / pixelRatio);
-  return { dataUrl, width, height };
+  // vis-timeline's bundled CSS animates group rows via CSS transitions
+  // (height/top, up to 0.4s ease-in-out) when they resize/reposition. A CSS
+  // transition triggers exactly one DOM mutation when it starts — the
+  // browser then interpolates it visually via the compositor with no
+  // further mutations — so waitForStable() below would see things go quiet
+  // almost immediately while the transition is still visually running,
+  // capturing mid-animation. Disabling transitions/animations first forces
+  // every style change to apply instantly instead.
+  el.addClass('tl-capture-no-transitions');
+  try {
+    // vis-timeline's layout (especially with autoHeight, which needs to
+    // measure content, resize, then remeasure) can take more than a single
+    // requestAnimationFrame to settle — waiting a fixed frame count was not
+    // reliable. Instead, wait for the DOM to actually stop changing, the
+    // same technique pubobs's own renderNoteToHTML uses for this exact
+    // problem (see waitForStable below).
+    await waitForStable(el);
+    await waitForImages(el);
+    const pixelRatio = window.devicePixelRatio || 1;
+    const dataUrl = await toPng(el, { pixelRatio, cacheBust: true });
+    const naturalHeight = await getImageNaturalHeight(dataUrl);
+    const width = el.clientWidth;
+    const height = Math.round(naturalHeight / pixelRatio);
+    return { dataUrl, width, height };
+  } finally {
+    el.removeClass('tl-capture-no-transitions');
+  }
 }
 
 export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promise<void> {
