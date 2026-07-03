@@ -2,6 +2,14 @@ import { toPng } from 'html-to-image';
 
 export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promise<void> {
   try {
+    // renderTimeline() schedules its real layout via a single
+    // requestAnimationFrame(() => tl.redraw()) — vis-timeline's first pass
+    // can report a zero-size box before that fires. waitForImages() below
+    // resolves via microtasks and can finish before that frame ever runs,
+    // so without this wait, toPng() can capture the container blank.
+    // Scheduling our own rAF after renderTimeline() already scheduled its
+    // internal one guarantees theirs runs first, within the same frame.
+    await waitForNextFrame();
     await waitForImages(el);
     const pixelRatio = window.devicePixelRatio || 1;
     const dataUrl = await toPng(el, { pixelRatio, cacheBust: true });
@@ -21,6 +29,10 @@ export async function rasterize(el: HTMLElement, tl: { destroy(): void }): Promi
     // and `el` untouched.
     console.error('vis-timeline: PNG rasterization failed, leaving interactive widget', e);
   }
+}
+
+function waitForNextFrame(): Promise<void> {
+  return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
 }
 
 async function waitForImages(el: HTMLElement): Promise<void> {
