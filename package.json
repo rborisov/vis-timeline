@@ -1,14 +1,16 @@
 {
 	"name": "vis-timeline",
 	"version": "0.3.4",
+	"private": true,
 	"description": "Render interactive timelines in notes. Supports BCE/CE historical dates, YAML authoring, and row groups with nesting.",
 	"main": "main.js",
 	"type": "module",
+	"workspaces": ["packages/*"],
 	"scripts": {
-		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"dev": "npm run build -w packages/core && node esbuild.config.mjs",
+		"build": "npm run build -w packages/core && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
-		"lint": "eslint .",
+		"lint": "eslint . && npm run lint -w packages/core",
 		"test": "vitest run",
 		"test:watch": "vitest"
 	},
@@ -28,8 +30,8 @@
 		"vitest": "^4.1.5"
 	},
 	"dependencies": {
-		"js-yaml": "^4.1.1",
 		"obsidian": "latest",
-		"vis-timeline": "^8.5.0"
+		"vis-timeline": "^8.5.0",
+		"vis-timeline-core": "^0.1.0"
 	}
 }

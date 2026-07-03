@@ -1,5 +1,5 @@
 import { Plugin } from 'obsidian';
-import { parseBlock } from './parser';
+import { parseBlock } from 'vis-timeline-core';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';

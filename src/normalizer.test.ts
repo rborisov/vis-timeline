@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseBceDate, formatHistoricalYear, normalizeItem, resolveGroups } from './normalizer';
-import type { RawGroupItem } from './types';
+import type { RawGroupItem } from 'vis-timeline-core';
 
 describe('parseBceDate', () => {
   it('returns null for a CE year string', () => {

@@ -1,0 +1,25 @@
+{
+  "name": "vis-timeline-core",
+  "version": "0.1.0",
+  "description": "Obsidian-independent parsing, normalization, and rendering core for vis-timeline blocks.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "license": "0-BSD",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1",
+    "vis-timeline": "^8.5.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.5"
+  }
+}

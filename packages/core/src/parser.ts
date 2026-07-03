@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml';
-import type { RawTimelineItem, RawGroupItem, BlockOptions, ParseResult } from './types';
+import type { RawTimelineItem, RawGroupItem, BlockOptions, ParseResult } from './types.js';
 
 export function parseBlock(source: string): ParseResult {
   let parsed: unknown;

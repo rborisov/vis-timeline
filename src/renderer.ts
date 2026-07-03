@@ -1,4 +1,4 @@
-import type { NormalizedTimelineItem, NormalizedGroup, BlockOptions } from './types';
+import type { NormalizedTimelineItem, NormalizedGroup, BlockOptions } from 'vis-timeline-core';
 import { Timeline } from 'vis-timeline/standalone';
 
 const DEFAULT_OPTIONS: Required<BlockOptions> = {

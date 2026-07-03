@@ -4,3 +4,4 @@ main.js
 AGENTS.md
 docs/superpowers/
 .worktrees/
+packages/*/dist/
