@@ -1,4 +1,4 @@
-import type { RawTimelineItem, NormalizedTimelineItem, RawGroupItem, NormalizedGroup } from 'vis-timeline-core';
+import type { RawTimelineItem, NormalizedTimelineItem, RawGroupItem, NormalizedGroup } from './types.js';
 
 // Matches: "-490", "-490-09-12"
 const NEGATIVE_YEAR_RE = /^(-\d+)(?:-(\d{1,2})(?:-(\d{1,2}))?)?$/;

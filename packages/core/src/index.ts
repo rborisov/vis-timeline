@@ -7,3 +7,4 @@ export type {
   ParseResult,
 } from './types.js';
 export { parseBlock } from './parser.js';
+export { normalizeItem, resolveGroups } from './normalizer.js';
