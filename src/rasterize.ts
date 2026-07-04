@@ -31,8 +31,11 @@ export async function capturePng(el: HTMLElement): Promise<Capture> {
     // problem (see waitForStable below).
     await waitForStable(el);
     await waitForImages(el);
-    const pixelRatio = window.devicePixelRatio || 1;
-    const dataUrl = await toPng(el, { pixelRatio, cacheBust: true });
+    // Cap at 2x even on higher-DPI devices — beyond that adds little
+    // visible clarity for a diagram of flat colors and bold text, but
+    // roughly quadruples+ the exported PNG's pixel count and file size.
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    const dataUrl = await capturePngWithoutLeakingFontStyles(el, { pixelRatio, cacheBust: true });
     const naturalHeight = await getImageNaturalHeight(dataUrl);
     const width = el.clientWidth;
     const height = Math.round(naturalHeight / pixelRatio);
@@ -74,6 +77,32 @@ export async function rasterize(
     // widget — never let a failure here break the note. Leave `tl` mounted
     // and `el` untouched.
     console.error('vis-timeline: PNG rasterization failed, leaving interactive widget', e);
+  }
+}
+
+// html-to-image's toPng() embeds fonts for faithful capture by injecting a
+// <style> element (with the font's data as base64) into the real
+// document.head — not into a detached clone, despite this repo's earlier
+// static read of its source suggesting otherwise. It's never removed, so
+// repeated calls within the same session (one per rasterized timeline
+// block) each leave their own copy behind. Confirmed in production: pubobs
+// sync of a vault with 181 timeline blocks inflated the shared CSS asset
+// its extractStyles() ships to readers from 1.3MB to 11.4MB (181 duplicate
+// @font-face embeds of an unrelated vault font), which was large enough to
+// OOM-kill pubobs's backend. Snapshotting document.head's <style> elements
+// before the call and removing whatever's new afterward cleans this up —
+// the embedded font data only needs to exist for this one capture.
+async function capturePngWithoutLeakingFontStyles(
+  el: HTMLElement,
+  options: Parameters<typeof toPng>[1]
+): Promise<string> {
+  const stylesBefore = new Set(Array.from(activeDocument.head.querySelectorAll('style')));
+  try {
+    return await toPng(el, options);
+  } finally {
+    for (const style of Array.from(activeDocument.head.querySelectorAll('style'))) {
+      if (!stylesBefore.has(style)) style.remove();
+    }
   }
 }
 
