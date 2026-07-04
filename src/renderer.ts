@@ -57,10 +57,15 @@ export function renderTimeline(
   const visOptions = {
     editable: false,
     height: useFixedHeight ? '100%' : undefined,
-    // Only matters when a block explicitly sets a fixed height and its
-    // content doesn't fit — otherwise the container already grows to show
-    // everything, so there's nothing to scroll.
-    verticalScroll: true,
+    // Only enable when there's an actual fixed height to scroll within.
+    // vis-timeline's own CSS makes verticalScroll force its *internal*
+    // group-label panels into height:100%+overflow-y:scroll (a separate,
+    // deeper mechanism from our outer container) — in auto-height mode
+    // (both the interactive default and the export path) there's no bound
+    // to scroll within, and this bounded/scrollable internal state was
+    // actively preventing those panels from growing to fit content,
+    // clipping the last group instead of just being unnecessary.
+    verticalScroll: useFixedHeight,
     margin: { item: { horizontal: 10, vertical: 4 }, axis: 5 },
     orientation: merged.orientation,
     stack: merged.stack,
