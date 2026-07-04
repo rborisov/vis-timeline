@@ -72,6 +72,15 @@ export async function rasterize(
       cls: 'tl-export-img',
       attr: { src: resourcePath, width, height },
     });
+
+    // Each rasterize() call allocates a full DOM clone, an SVG wrapping it,
+    // a canvas, and PNG/base64 data — pubobs syncs run through many of
+    // these in quick succession (one per timeline block), which can
+    // outpace V8's garbage collector and exhaust the renderer's heap
+    // (confirmed: an actual OOM crash of Obsidian's own process during a
+    // sync with many blocks). Yielding to a macrotask after each capture
+    // gives the GC a chance to reclaim memory between blocks.
+    await new Promise((resolve) => window.setTimeout(resolve, 50));
   } catch (e) {
     // Rasterization is a nicety on top of an already-working interactive
     // widget — never let a failure here break the note. Leave `tl` mounted
