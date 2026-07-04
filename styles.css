@@ -145,11 +145,13 @@
   width: 1600px;
 }
 
-/* Export path only — .vis-timeline's overflow:hidden (for the rounded-card
-   look in interactive use) can clip the bottom row if vis-timeline's
-   autoHeight calculation comes out even slightly short of actual content
-   height. Since the export container already grows to fit everything, this
+/* Applied whenever the container grows to fit content instead of using a
+   fixed height (the default for both interactive and export) —
+   .vis-timeline's overflow:hidden (kept for the rounded-card look when a
+   block does set a fixed height) can clip the bottom row if vis-timeline's
+   height calculation comes out even slightly short of actual content
+   height. Since the container already grows to fit everything here, this
    just guarantees nothing gets cropped regardless of that measurement. */
-.tl-export-width .vis-timeline {
+.tl-auto-height .vis-timeline {
   overflow: visible !important;
 }

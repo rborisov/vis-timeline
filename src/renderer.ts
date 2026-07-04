@@ -1,8 +1,9 @@
 import type { NormalizedTimelineItem, NormalizedGroup, BlockOptions } from './types';
 import { Timeline } from 'vis-timeline/standalone';
 
-const DEFAULT_OPTIONS: Required<BlockOptions> = {
-  height: '75vh',
+// height is intentionally not defaulted here — see renderTimeline() below:
+// no explicit height means "grow to fit all content," not a fallback value.
+const DEFAULT_OPTIONS: Required<Omit<BlockOptions, 'height'>> = {
   orientation: 'top',
   stack: true,
   zoomMin: 1000 * 60 * 60 * 24 * 365 * 10,
@@ -18,16 +19,27 @@ export function renderTimeline(
   autoHeight = false
 ): { destroy(): void } {
   const merged = { ...DEFAULT_OPTIONS, ...options };
+  const explicitHeight = options.height;
+  // A fixed height only applies if the block explicitly asked for one
+  // (the documented `height` option) and this isn't the export path — a
+  // rasterized PNG has no scrolling, so it always grows to fit everything
+  // regardless of what the block's height option says. Otherwise (no
+  // explicit height, the common case), the widget now grows to show the
+  // full diagram by default instead of clipping to a fixed viewport height.
+  const useFixedHeight = !autoHeight && explicitHeight !== undefined;
 
   const container = el.createEl('div');
   container.className = 'timeline-plugin';
-  // A fixed/viewport-relative height only makes sense when the widget is
-  // interactive and scrollable. A rasterized PNG has no scrolling, so a
-  // fixed height would silently clip content — autoHeight lets vis-timeline
-  // grow the container to fit everything instead.
-  if (!autoHeight) {
-    container.style.height = merged.height;
+  if (useFixedHeight) {
+    container.style.height = explicitHeight;
   } else {
+    // No clipping/scrolling needed once the container grows to fit content
+    // — overrides .vis-timeline's overflow:hidden (otherwise kept for the
+    // rounded-card look) in case vis-timeline's height calculation ever
+    // comes out even slightly short of the actual content height.
+    container.addClass('tl-auto-height');
+  }
+  if (autoHeight) {
     // The export path is otherwise constrained to the width of whatever
     // ambient container it's rendered into (pubobs's fixed 800px offscreen
     // container) — cramming a wide date range into that narrow a width
@@ -44,12 +56,10 @@ export function renderTimeline(
 
   const visOptions = {
     editable: false,
-    height: autoHeight ? undefined : '100%',
-    // Groups that don't all fit within the fixed interactive height (75vh
-    // by default) were previously just clipped by overflow:hidden with no
-    // way to reach the rest — enables vis-timeline's own internal scrollbar
-    // so every group stays reachable. No effect in autoHeight/export mode,
-    // where the container already grows to fit everything.
+    height: useFixedHeight ? '100%' : undefined,
+    // Only matters when a block explicitly sets a fixed height and its
+    // content doesn't fit — otherwise the container already grows to show
+    // everything, so there's nothing to scroll.
     verticalScroll: true,
     margin: { item: { horizontal: 10, vertical: 4 }, axis: 5 },
     orientation: merged.orientation,
