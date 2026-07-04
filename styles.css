@@ -144,3 +144,12 @@
 .tl-export-width {
   width: 1600px;
 }
+
+/* Export path only — .vis-timeline's overflow:hidden (for the rounded-card
+   look in interactive use) can clip the bottom row if vis-timeline's
+   autoHeight calculation comes out even slightly short of actual content
+   height. Since the export container already grows to fit everything, this
+   just guarantees nothing gets cropped regardless of that measurement. */
+.tl-export-width .vis-timeline {
+  overflow: visible !important;
+}
