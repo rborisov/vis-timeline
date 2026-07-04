@@ -45,6 +45,12 @@ export function renderTimeline(
   const visOptions = {
     editable: false,
     height: autoHeight ? undefined : '100%',
+    // Groups that don't all fit within the fixed interactive height (75vh
+    // by default) were previously just clipped by overflow:hidden with no
+    // way to reach the rest — enables vis-timeline's own internal scrollbar
+    // so every group stays reachable. No effect in autoHeight/export mode,
+    // where the container already grows to fit everything.
+    verticalScroll: true,
     margin: { item: { horizontal: 10, vertical: 4 }, axis: 5 },
     orientation: merged.orientation,
     stack: merged.stack,
