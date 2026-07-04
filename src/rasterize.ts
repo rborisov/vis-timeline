@@ -60,7 +60,7 @@ export async function capturePng(el: HTMLElement): Promise<Capture> {
 
 export async function rasterize(
   el: HTMLElement,
-  tl: { destroy(): void },
+  tl: { destroy(): void; redraw(): void },
   app: App,
   sourcePath: string,
   blockSource: string
@@ -72,6 +72,17 @@ export async function rasterize(
     // actually rendering it wider.
     const container = el.querySelector<HTMLElement>('.timeline-plugin');
     if (!container) throw new Error('timeline container not found');
+
+    // vis-timeline's own auto-height computation reads its center panel's
+    // current offsetHeight to size the root (see
+    // node_modules/vis-timeline/.../vis-timeline-graph2d.js — search
+    // "props.center.height = dom.center.offsetHeight") — but offsetHeight
+    // only reflects layout from before this same redraw pass, so it can
+    // read one redraw cycle stale, especially with many groups. Forcing a
+    // few more redraw+layout-flush cycles here (beyond renderTimeline()'s
+    // single scheduled one) lets the height actually converge before
+    // capturing.
+    await settleHeight(container, tl);
 
     const { dataUrl, width, height } = await capturePng(container);
     // Written as a real vault file (not embedded inline) so pubobs uploads
@@ -130,6 +141,24 @@ async function capturePngWithoutLeakingFontStyles(
 
 function waitForNextFrame(): Promise<void> {
   return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+}
+
+// Repeatedly redraws and waits a frame until el's height stops changing
+// between iterations (or maxIterations is hit) — see the comment at the
+// call site in rasterize() for why a single redraw isn't always enough.
+async function settleHeight(
+  el: HTMLElement,
+  tl: { redraw(): void },
+  maxIterations = 6
+): Promise<void> {
+  let lastHeight = -1;
+  for (let i = 0; i < maxIterations; i++) {
+    tl.redraw();
+    await waitForNextFrame();
+    const currentHeight = el.scrollHeight;
+    if (currentHeight === lastHeight) return;
+    lastHeight = currentHeight;
+  }
 }
 
 // Waits until el's subtree stops mutating for quietForMs, up to maxWaitMs

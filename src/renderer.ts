@@ -17,7 +17,7 @@ export function renderTimeline(
   groups?: NormalizedGroup[],
   onItemClick?: (id: string | number) => void,
   autoHeight = false
-): { destroy(): void } {
+): { destroy(): void; redraw(): void } {
   const merged = { ...DEFAULT_OPTIONS, ...options };
   const explicitHeight = options.height;
   // A fixed height only applies if the block explicitly asked for one
