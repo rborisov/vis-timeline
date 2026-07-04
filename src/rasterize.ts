@@ -35,7 +35,20 @@ export async function capturePng(el: HTMLElement): Promise<Capture> {
     // visible clarity for a diagram of flat colors and bold text, but
     // roughly quadruples+ the exported PNG's pixel count and file size.
     const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-    const dataUrl = await capturePngWithoutLeakingFontStyles(el, { pixelRatio, cacheBust: true });
+    // toPng() sizes its capture canvas from the element's own reported
+    // height (offsetHeight/getBoundingClientRect), not the true extent of
+    // its content — .tl-auto-height's overflow:visible (renderer.ts) makes
+    // overflowing content paint on screen without changing that reported
+    // height, so a capture based on it could still crop the last row even
+    // though nothing looks clipped in a live view. scrollHeight reflects
+    // the actual content extent regardless of the overflow setting, so
+    // passing it explicitly guarantees the canvas is tall enough.
+    const captureHeight = el.scrollHeight;
+    const dataUrl = await capturePngWithoutLeakingFontStyles(el, {
+      pixelRatio,
+      cacheBust: true,
+      height: captureHeight,
+    });
     const naturalHeight = await getImageNaturalHeight(dataUrl);
     const width = el.clientWidth;
     const height = Math.round(naturalHeight / pixelRatio);
