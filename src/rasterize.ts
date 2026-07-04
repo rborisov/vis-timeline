@@ -40,10 +40,14 @@ export async function capturePng(el: HTMLElement): Promise<Capture> {
     // its content — .tl-auto-height's overflow:visible (renderer.ts) makes
     // overflowing content paint on screen without changing that reported
     // height, so a capture based on it could still crop the last row even
-    // though nothing looks clipped in a live view. scrollHeight reflects
-    // the actual content extent regardless of the overflow setting, so
-    // passing it explicitly guarantees the canvas is tall enough.
-    const captureHeight = el.scrollHeight;
+    // though nothing looks clipped in a live view. el.scrollHeight was
+    // tried first but wasn't reliable either — vis-timeline positions
+    // group rows absolutely within nested inner panels
+    // (.vis-panel.vis-center/-left/-right), and scrollHeight measured on
+    // our outer container doesn't necessarily see through those nested
+    // positioning contexts. Measuring every descendant's actual bottom
+    // edge directly is slower but can't be fooled by any of that.
+    const captureHeight = measureDeepestBottomEdge(el);
     const dataUrl = await capturePngWithoutLeakingFontStyles(el, {
       pixelRatio,
       cacheBust: true,
@@ -125,6 +129,20 @@ export async function rasterize(
 // OOM-kill pubobs's backend. Snapshotting document.head's <style> elements
 // before the call and removing whatever's new afterward cleans this up —
 // the embedded font data only needs to exist for this one capture.
+// Finds the lowest bottom edge among every descendant of el, relative to
+// el's own top — a direct, can't-be-fooled-by-nested-overflow measurement
+// of the true rendered content height, used as the export capture height
+// instead of trusting scrollHeight or vis-timeline's own size calculation.
+function measureDeepestBottomEdge(el: HTMLElement): number {
+  const containerTop = el.getBoundingClientRect().top;
+  let maxBottom = el.scrollHeight;
+  for (const child of Array.from(el.querySelectorAll('*'))) {
+    const bottom = child.getBoundingClientRect().bottom - containerTop;
+    if (bottom > maxBottom) maxBottom = bottom;
+  }
+  return Math.ceil(maxBottom);
+}
+
 async function capturePngWithoutLeakingFontStyles(
   el: HTMLElement,
   options: Parameters<typeof toPng>[1]
@@ -155,7 +173,7 @@ async function settleHeight(
   for (let i = 0; i < maxIterations; i++) {
     tl.redraw();
     await waitForNextFrame();
-    const currentHeight = el.scrollHeight;
+    const currentHeight = measureDeepestBottomEdge(el);
     if (currentHeight === lastHeight) return;
     lastHeight = currentHeight;
   }

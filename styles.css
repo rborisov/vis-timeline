@@ -151,7 +151,16 @@
    block does set a fixed height) can clip the bottom row if vis-timeline's
    height calculation comes out even slightly short of actual content
    height. Since the container already grows to fit everything here, this
-   just guarantees nothing gets cropped regardless of that measurement. */
-.tl-auto-height .vis-timeline {
+   just guarantees nothing gets cropped regardless of that measurement.
+   vis-timeline's own bundled CSS also sets overflow:hidden on its
+   *internal* panels (.vis-panel.vis-center/.vis-left/.vis-right, one
+   level deeper than .vis-timeline) — group rows are positioned within
+   those specifically, so overriding only the outer .vis-timeline wasn't
+   enough; anything absolutely positioned inside a still-hidden inner
+   panel would still get clipped there regardless. */
+.tl-auto-height .vis-timeline,
+.tl-auto-height .vis-panel.vis-center,
+.tl-auto-height .vis-panel.vis-left,
+.tl-auto-height .vis-panel.vis-right {
   overflow: visible !important;
 }
