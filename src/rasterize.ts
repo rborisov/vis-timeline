@@ -1,4 +1,4 @@
-import type { App } from 'obsidian';
+import type { App, TFile } from 'obsidian';
 import { toPng } from 'html-to-image';
 import { saveExportAsset } from './export-asset';
 
@@ -68,7 +68,7 @@ export async function rasterize(
   app: App,
   sourcePath: string,
   blockSource: string
-): Promise<void> {
+): Promise<TFile | null> {
   try {
     // Capture the timeline's own container, not `el` itself. renderTimeline()
     // widens the container beyond el's ambient (pubobs-constrained) width for
@@ -92,7 +92,7 @@ export async function rasterize(
     // Written as a real vault file (not embedded inline) so pubobs uploads
     // it as a normal asset instead of bloating its sync request body — see
     // export-asset.ts.
-    const resourcePath = await saveExportAsset(app, sourcePath, blockSource, dataUrl);
+    const { resourcePath, file } = await saveExportAsset(app, sourcePath, blockSource, dataUrl);
 
     tl.destroy();
     el.empty();
@@ -109,11 +109,13 @@ export async function rasterize(
     // sync with many blocks). Yielding to a macrotask after each capture
     // gives the GC a chance to reclaim memory between blocks.
     await new Promise((resolve) => window.setTimeout(resolve, 50));
+    return file;
   } catch (e) {
     // Rasterization is a nicety on top of an already-working interactive
     // widget — never let a failure here break the note. Leave `tl` mounted
     // and `el` untouched.
     console.error('vis-timeline: PNG rasterization failed, leaving interactive widget', e);
+    return null;
   }
 }
 

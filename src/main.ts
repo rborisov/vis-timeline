@@ -2,6 +2,7 @@ import { MarkdownRenderChild, Plugin } from 'obsidian';
 import { parseBlock } from './parser';
 import { normalizeItem, resolveGroups } from './normalizer';
 import { renderTimeline } from './renderer';
+import { deleteExportAsset } from './export-asset';
 import { rasterize } from './rasterize';
 import { DEFAULT_SETTINGS, TimelineBlockSettings } from './settings';
 import { BasesTimelineView, getBasesTimelineOptions } from './bases-view';
@@ -35,7 +36,14 @@ export default class VisTimelinePlugin extends Plugin {
         const tl = renderTimeline(el, items, options, groups, undefined, isPubobsExport);
 
         if (isPubobsExport) {
-          return rasterize(el, tl, this.app, ctx.sourcePath, source);
+          return rasterize(el, tl, this.app, ctx.sourcePath, source).then((file) => {
+            if (!file) return;
+            const child = new MarkdownRenderChild(el);
+            child.onunload = () => {
+              void deleteExportAsset(this.app, file);
+            };
+            ctx.addChild(child);
+          });
         }
 
         const child = new MarkdownRenderChild(el);
