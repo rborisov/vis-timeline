@@ -10,20 +10,38 @@ import { dataUrlToArrayBuffer } from './data-url';
 // limit its server/proxy enforces, breaking the entire sync with a
 // truncated, invalid JSON response.
 //
+// The file is transient: after pubobs finishes rendering the note it is
+// deleted via MarkdownRenderChild.onunload (see main.ts). The published
+// site keeps its own uploaded copy; Obsidian keeps the interactive
+// vis-timeline block in the note source.
+//
 // The filename is a stable hash of the block's source (not the note's
-// full content) plus the note's own basename, so re-syncing the same
-// unchanged block overwrites the same file rather than piling up new
-// ones on every sync.
+// full content) plus the note's own basename, so concurrent exports of
+// the same block target the same path.
+export interface ExportAsset {
+  resourcePath: string;
+  file: TFile;
+}
+
 export async function saveExportAsset(
   app: App,
   sourcePath: string,
   blockSource: string,
   dataUrl: string
-): Promise<string> {
+): Promise<ExportAsset> {
   const path = getAssetPath(sourcePath, hashBlockSource(blockSource));
   const data = dataUrlToArrayBuffer(dataUrl);
   const file = await writeBinary(app, path, data);
-  return app.vault.getResourcePath(file);
+  return { resourcePath: app.vault.getResourcePath(file), file };
+}
+
+export async function deleteExportAsset(app: App, file: TFile): Promise<void> {
+  const existing = app.vault.getAbstractFileByPath(file.path);
+  if (existing instanceof TFile) {
+    // Transient pubobs export artifact — permanent delete, not trash.
+    // eslint-disable-next-line obsidianmd/prefer-file-manager-trash-file -- ephemeral raster output
+    await app.vault.delete(existing);
+  }
 }
 
 function hashBlockSource(source: string): string {
